@@ -16,6 +16,8 @@ gem 'coffee-rails', '~> 4.1.0'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
 
+
+gem 'mini_magick'
 gem 'carrierwave'
 gem 'carrierwave-mongoid' #, :git => 'https://github.com/jnicklas/carrierwave-mongoid.git', :branch => 'mongoid-3.0', :require => 'carrierwave/mongoid'
 gem 'mongoid', '~> 4.0.0'

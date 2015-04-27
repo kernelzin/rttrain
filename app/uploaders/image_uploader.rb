@@ -17,7 +17,13 @@ class ImageUploader < CarrierWave::Uploader::Base
   end
 
   def filename
-    "#{model.font.train.name}.#{model.font.name}.exp#{model.font.pictures.count}#{ext}"
+    if original_filename
+      if model && model.read_attribute(mounted_as).present?
+        model.read_attribute(mounted_as)
+      else
+        "#{model.font.train.name}.#{model.font.name}.exp#{model.font.pictures.count}#{ext}"
+      end
+    end
   end
 
   def store_dir

@@ -2,11 +2,18 @@ class Picture
 
   include Mongoid::Document
 
-  field :name
-
   mount_uploader :data, ImageUploader
 
-  embeds_one :box
+  has_one :box
+
   belongs_to :font
+
+  after_save :boxer
+
+  def boxer
+    box = Box.new
+    box.picture_id = id.to_s
+    box.save
+  end
 
 end

@@ -1,0 +1,10 @@
+%h1 TrainIndex
+%p Nice Traines to train
+
+- for train in @trains
+  %h6= link_to train.name, train
+  - for font in train.fonts
+    %h6= link_to "-#{font.name}", font
+    - for picture in font.pictures
+      %h6= link_to "--#{picture.data.to_s}", picture
+      %h6= link_to "--#{picture.box}", picture.box

@@ -9,6 +9,15 @@ Rails.application.routes.draw do
   resources :box do
   end
 
+  resources :train do
+  end
+
+  resources :picture do
+  end
+
+  resources :font do
+  end
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

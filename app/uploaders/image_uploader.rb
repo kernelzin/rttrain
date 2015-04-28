@@ -4,7 +4,7 @@ class ImageUploader < CarrierWave::Uploader::Base
 
   # Include RMagick or MiniMagick support:
   # include CarrierWave::RMagick
-  # include CarrierWave::MiniMagick
+  include CarrierWave::MiniMagick
 
   # Choose what kind of storage to use for this uploader:
   storage :file
@@ -12,19 +12,6 @@ class ImageUploader < CarrierWave::Uploader::Base
 
   # Override the directory where uploaded files will be stored.
   # This is a sensible default for uploaders that are meant to be mounted:
-  def ext
-    File.extname(original_filename)
-  end
-
-  def filename
-    if original_filename
-      if model && model.read_attribute(mounted_as).present?
-        model.read_attribute(mounted_as)
-      else
-        "#{model.font.train.name}.#{model.font.name}.exp#{model.font.pictures.count}#{ext}"
-      end
-    end
-  end
 
   def store_dir
     "#{model.font.train.name}/"
@@ -44,6 +31,14 @@ class ImageUploader < CarrierWave::Uploader::Base
   # def scale(width, height)
   #   # do something
   # end
+  version :jpg do
+    process convert: 'jpg'
+    def full_filename(for_file)
+      n = for_file.split('.')
+      n[-1] = '.jpg'
+      n.join
+    end
+  end
 
   # Create different versions of your uploaded files:
   # version :thumb do

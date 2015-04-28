@@ -6,5 +6,5 @@
   - for font in train.fonts
     %h6= link_to "-#{font.name}", font
     - for picture in font.pictures
-      %h6= link_to "--#{picture.data.to_s}", picture
-      %h6= link_to "--#{picture.box}", picture.box
+      %h6= link_to "--#{picture.name}", picture
+      %h6= link_to "--#{picture.box.chars.count}", picture.box

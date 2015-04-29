@@ -3,7 +3,9 @@
 %body
   .row
     .col-md-8
-      = image_tag  @box.picture.data.jpg, :width => "100%"
+      = image_tag  @box.picture.data.jpg,  id: "note_photo"
+      %canvas{:id => "threshold"}
+      %button{:onclick => "threshold()"} Threshold the image
     .col-md-4
       %h1 Box
 

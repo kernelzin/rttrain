@@ -4,8 +4,11 @@ $ ->
 
   c = $('#canvas')
 
+  console.log("picture")
   c.width(x)
+
   c.height(y)
+  console.log(window.location)
 
   canvas = (c) ->
     img = $('#note_photo').get(0)

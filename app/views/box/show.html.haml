@@ -6,9 +6,9 @@
       %p Threshold
       .row
         .col-md-2
-          %button{:id => "threshold_btn" } Threshold the image
-      = image_tag  @box.picture.data.jpg,  id: "photo" , width: "1000px"# , hidden: true
-      %canvas{:id => "box" }
+          %button{:id => "threshold_btn" } Thres hold the image
+      = image_tag  @box.picture.data.jpg,  id: "picture" , width: "100%",  hidden: true
+      %canvas{:id => "canvas" }
 
 
     .col-md-4

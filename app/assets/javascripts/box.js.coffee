@@ -6,32 +6,53 @@
 
 #
 # rect with line handlers
+$ ->
+  p = $('#picture')
+  x =  p.width()
+  y =  p.height()
 
-  x =  $('#photo').width()
-  y =  $('#photo').height()
-
-  c = $('#box')
-
-
-  c.width(x)
-  c.height(y)
+  b = $('#canvas')
+  b.width(x)
+  b.height(y)
 
   canvas = (c) ->
-    console.log("entrei canvas")
-    console.log(c)
-    img = $('#photo').get(0)
-    cp = c.get(0).getContext('2d');
-    cp.canvas.width = img.width
-    cp.canvas.height = img.height
+    img = $('#picture').get(0)
+    cp = b.get(0).getContext('2d')
+    cp.canvas.width = img.naturalWidth
+    cp.canvas.height = img.naturalHeight
     cp.drawImage(img, 0, 0)
     pixel = cp.getImageData(0,0, img.width, img.height)
-    pixel
+    cp
 
-  canvas(c)
+  canvas()
+
+  blob = (c) ->
+    cp = canvas()
+    cp.beginPath()
+    cp.rect(c.x1, p - c.y2 , c.x2 - c.x1, c.y2 - c.y1)
+    # cp.fillStyle = 'yellow'
+    # cp.fill()
+    cp.lineWidth = 3
+    cp.strokeStyle = 'red'
+    cp.stroke()
 
 
 
-#   console.log("xxx")
+
+  $.getJSON window.location + ".json", (data) ->
+    p = $('#picture').get(0).naturalHeight
+    c = data.chars[0]
+    for char in data.chars
+      blob(char)
+
+
+    # context.beginPath()
+    # context.rect(188, 50, 200, 100)
+    # context.fillStyle = 'yellow'
+    # context.fill()
+    # context.lineWidth = 7
+    # context.strokeStyle = 'black'
+    # context.stroke()
 
 #   createRect = (x, y, width, height) ->
 #     rect = paper.rect(x, y, width, height).attr(

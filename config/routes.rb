@@ -9,13 +9,13 @@ Rails.application.routes.draw do
   resources :box do
   end
 
-  resources :train do
+  resources :trains do
   end
 
-  resources :picture do
+  resources :pictures do
   end
 
-  resources :font do
+  resources :fonts do
   end
 
   # The priority is based upon order of creation: first created -> highest priority.

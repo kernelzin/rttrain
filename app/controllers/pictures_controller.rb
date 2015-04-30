@@ -1,16 +1,16 @@
-class TrainsController < ApplicationController
+class PicturesController < ApplicationController
   respond_to :html, :json, :xml, :js # TODO: remove js
 
   def index
-    @trains = Train.all
+    @pictures = Picture.all
     respond_to do |format|
       format.html
-      format.json { render json:  @trains }
+      format.json { render json:  @picturees }
     end
   end
 
  def resource
-    @train = Train.find(params[:id])
+    @picture = Picture.find(params[:id])
   end
 
   def new
@@ -21,12 +21,14 @@ class TrainsController < ApplicationController
 
   end
 
+  def edit
+    resource
+  end
+
   def show
     resource
     respond_to do |format|
       format.html
-      format.json { render json:  @train }
-
     end
   end
 end

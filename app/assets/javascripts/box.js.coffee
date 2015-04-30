@@ -11,35 +11,24 @@
 $ ->
   x =  $('#note_photo').width()
   y =  $('#note_photo').height()
-  console.log(x)
-  console.log(y)
-  # $('#note_photo').after('<canvas>')
-  # $('#note_photo').next().attr("id","threshold");
 
-
-
-  c = $('#threshold')
-  cp = $('#threshold').get(0).getContext('2d');
-
+  c = $('#canvas')
   c.width(x)
   c.height(y)
 
-  console.log(c)
+  canvas = (c) ->
+    img = $('#note_photo').get(0)
+    cp = c.get(0).getContext('2d');
+    cp.canvas.width = img.width
+    cp.canvas.height = img.height
+    cp.drawImage(img, 0, 0)
+    pixel = cp.getImageData(0,0, img.width, img.height)
+    pixel
+  mycanvas = document.getElementById("canvas")
+  image    = mycanvas.toDataURL("image/png")
 
-  img = $('#note_photo').get(0)
-
-  cp.drawImage(img, 0, 0, 2167, 2042)
-  pixel = cp.getImageData(0,0, c.width(), c.height())
-
-
-  console.log(pixel)
-
-  console.log(img)
-  console.log(img.width)
-  console.log(img.height)
-
-  console.log(c.width())
-  console.log(c.height())
+  console.log(image)
+  canvas(c)
 
   threshold = (pixel, threshold) ->
     d = pixel.data
@@ -51,11 +40,23 @@ $ ->
       v = if 0.2126 * r + 0.7152 * g + 0.0722 * b >= threshold then 255 else 0
       d[i] = d[i + 1] = d[i + 2] = v
       i += 4
-    cp = $('#threshold').get(0).getContext('2d');
-    pixel
+    canvas($('#canvas'))
+    cp = $('#canvas').get(0).getContext('2d');
     cp.putImageData(pixel, 0, 0);
-    console.log(pixel)
 
+
+  $('#threshold').change ->
+    threshold(canvas(c), $('#threshold').val())
+    $('#threshold_val').val($('#threshold').val())
+    return
+
+  $('#threshold_val').change ->
+    $('#threshold').val($('#threshold_val').val())
+    return
+
+  $('#threshold_btn').click ->
+    threshold(canvas(c), $('#threshold').val())
+    return
   # threshold(pixel, 100)
 
 

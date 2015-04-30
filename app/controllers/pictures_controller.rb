@@ -25,10 +25,22 @@ class PicturesController < ApplicationController
     resource
   end
 
+  def update(obj = nil)
+    obj ||= resource
+    obj.update_attributes(permitted_params)
+    redirect_to(trains_path)
+  end
+
+
   def show
     resource
     respond_to do |format|
       format.html
     end
+  end
+  private
+
+  def permitted_params
+    params.require(:picture).permit!
   end
 end

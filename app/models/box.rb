@@ -33,6 +33,9 @@ class Box
     filename = "#{my_name}#{File.extname(picture.data.file.file)}"
     uri = picture.data.file.is_a?(CarrierWave::SanitizedFile) ? picture.data.file.path : picture.data.url
     download_tmp(path, filename, uri)
+    if picture.threshold
+      `convert #{path}/#{filename} -threshold #{picture.threshold / 2.55}% #{path}/#{filename}`
+    end
     `tesseract #{path}/#{filename} #{path}/#{my_name} -l #{language} batch.nochop makebox`
     from_file
   end

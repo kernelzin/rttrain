@@ -1,4 +1,3 @@
-= stylesheet_link_tag "application", media: "all", "data-turbolinks-track" => true
 %head
 %body
   %br
@@ -6,14 +5,10 @@
     .col-md-8
       %p Threshold
       .row
-        .col-md-8
-          %input{:id => "threshold", :type => "range", :min => "0", :max => "255", :value => "0"}
-        .col-md-2
-          %input{:id => "threshold_val", :type => "number",  :min => "0", :max => "255", :value => "0" }
         .col-md-2
           %button{:id => "threshold_btn" } Threshold the image
-      = image_tag  @box.picture.data.jpg,  id: "note_photo" , width: "100%", hidden: true
-      %canvas{:id => "canvas" }
+      = image_tag  @box.picture.data.jpg,  id: "photo" , width: "1000px"# , hidden: true
+      %canvas{:id => "box" }
 
 
     .col-md-4

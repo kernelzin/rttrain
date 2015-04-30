@@ -4,6 +4,8 @@ class Picture
 
   field :name
 
+  field :threshold, type: Integer
+
   mount_uploader :data, ImageUploader
 
   has_one :box

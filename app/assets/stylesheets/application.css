@@ -13,4 +13,5 @@
  *= require_tree .
  *= require boot
  *= require_self
+ *= require box
  */

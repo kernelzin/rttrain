@@ -59,7 +59,7 @@ $ ->
 # Constructor for Shape objects to hold data for all drawn objects.
 # For now they will just be defined as rectangles.
 
-  Shape = (x, y, w, h, fill) ->
+  Shape = (x, y, w, h, fill, char) ->
     # This is a very simple and unsafe constructor. All we're doing is checking if the values exist.
     # "x || 0" just means "if there is a value for x, use that. Otherwise use 0."
     # But we aren't checking anything else! We could put "Lalala" for the value of x
@@ -70,6 +70,7 @@ $ ->
     @fill = fill or '#AAAAAA'
     @selected = false
     @closeEnough = 2
+    @char = char
     return
 
   CanvasState = (canvas) ->
@@ -119,6 +120,7 @@ $ ->
       false
     ), false
     # Up, down, and move are for dragging
+    #
     #
     canvas.addEventListener 'mousedown', ((e) ->
       console.log("mouseDown")
@@ -348,7 +350,6 @@ $ ->
     #     # s.addShape new Shape(80, 150, 60, 30, 'rgba(127, 255, 212, .5)')
     #     # s.addShape new Shape(125, 80, 30, 80, 'rgba(245, 222, 179, .7)')
     # console.log(s.addShape)
-    s
     return
 
   # checks if two points are close enough to each other depending on the closeEnough param
@@ -412,8 +413,9 @@ $ ->
     return
 
   CanvasState::removeShape = (shape) ->
-    @shapes.pop shape
+    @shapes.splice(shape, 1)
     @valid = false
+    @selection = @shapes.indexOf(shape)
     return
 
   CanvasState::clear = ->
@@ -458,7 +460,9 @@ $ ->
         i++
       # draw selected shape
       if @selection != null
-        @selection.draw ctx
+        if this.selection.draw
+          console.log(this)
+          @selection.draw ctx
       # draw selection
       # right now this is just a stroke along the edge of the selected Shape
       if @selection != null
@@ -533,12 +537,23 @@ $ ->
   s = new CanvasState($('#canvas').get(0))
   init(s)
   # console.log(s)
-
-  $(document).bind 'keyup', (e) ->
-
-    if e.keyCode == 46
-      s.selection = box[1]
-      for b in box
+  #
+  #
+  seek_selected = ->
+    for b in s.shapes
+      if b
         if b.selected
-          box.splice(box.indexOf(b), 1)
-          console.log(box.indexOf(b))
+          return b
+
+  fill_inputs = ->
+    s.draw($('#canvas').get(0))
+    return
+  $(document).bind 'keyup', (e) ->
+    if e.keyCode == 46
+      sel = seek_selected()
+      s.removeShape(s.shapes.indexOf(sel))
+
+
+  $('#nav').affix offset:
+    top: $('#nav').offset().top
+    bottom: $('footer').outerHeight(true) + $('.application').outerHeight(true) + 40

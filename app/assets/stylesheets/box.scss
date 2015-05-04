@@ -1,3 +1,19 @@
 // Place all the styles related to the box controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+
+.affix-top {
+    position: relative;
+    width: 250px
+}
+
+.affix {
+    top: 20px;
+    width: 250px
+}
+
+.affix-bottom {
+    width: 213px;
+    position: absolute;
+}

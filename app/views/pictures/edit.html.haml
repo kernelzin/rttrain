@@ -2,8 +2,10 @@
 %body
 = form_for(@picture, :html =>{:class => "form", :multipart => true})  do |f|
   %br
+
   .row
     .col-md-8
+      %input{:id => "js", :value => "picture", :hidden => true}
       %p Threshold
       .row
         .col-md-8
@@ -13,5 +15,5 @@
           = f.number_field :threshold,:id => "threshold_val", :type => "number",  :min => "0", :max => "255"
         .col-md-2
           %button{:id => "threshold_btn" , :type => 'submit'} Salvar
-      = image_tag  @picture.data.jpg,  id: "note_photo" , width: "100%", hidden: true
+      = image_tag  @picture.data.jpg,  id: "picture" , width: "100%", hidden: true
       %canvas{:id => "canvas" }

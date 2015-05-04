@@ -15,7 +15,8 @@
 //= require turbolinks
 //= require jquery.turbolinks
 //= require bootstrap
-//= require raphael-min
+//= require jcanvas.min
+//= require jcanvas-handles.min
 //= require box
 //= require picture
 //= require_tree .

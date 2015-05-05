@@ -3,7 +3,7 @@
   %br
   .row
     .col-md-7
-      = image_tag  @box.picture.data.jpg,  id: "picture",  hidden: true, width: "979" , heigh: "1305"
+      = image_tag  @box.picture.data.jpg,  id: "picture",  hidden: true, width: "979" , heigh: "1305", opacity: 0.4
       %canvas{:id => "canvas"}
     .col-md-2.scrollspy
       %ul#nav.affix-top{"data-spy" => "affix"}

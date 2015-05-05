@@ -31,33 +31,19 @@ $ ->
     cp.strokeStyle = 'red'
     cp.stroke()
 
-
-
-    # Draws this shape to a given context
+  # Draws this shape to a given context
   # By Simon Sarris
   # www.simonsarris.com
-  # sarris@acm.org
   #
-  # Last update December 2011
+  # Extended by Philipp Sporrer
+  # planifica.meteor.com
+  #
+  # Last update December 2014
   #
   # Free to use and distribute at will
   # So long as you are nice to people, etc
   # Constructor for Shape objects to hold data for all drawn objects.
   # For now they will just be defined as rectangles.
-
-  # Draws this shape to a given context
-# By Simon Sarris
-# www.simonsarris.com
-#
-# Extended by Philipp Sporrer
-# planifica.meteor.com
-#
-# Last update December 2014
-#
-# Free to use and distribute at will
-# So long as you are nice to people, etc
-# Constructor for Shape objects to hold data for all drawn objects.
-# For now they will just be defined as rectangles.
 
   Shape = (x, y, w, h, fill, char) ->
     # This is a very simple and unsafe constructor. All we're doing is checking if the values exist.
@@ -69,7 +55,7 @@ $ ->
     @h = h or 1
     @fill = fill or '#AAAAAA'
     @selected = false
-    @closeEnough = 2
+    @closeEnough = 10
     @char = char
     return
 
@@ -123,7 +109,6 @@ $ ->
     #
     #
     canvas.addEventListener 'mousedown', ((e) ->
-      console.log("mouseDown")
       mouse = myState.getMouse(e)
       mx = mouse.x
       my = mouse.y
@@ -203,18 +188,6 @@ $ ->
     #   return
     # ), true
     # mouse down handler for selected state
-    handlefocus = (e) ->
-      if e.type == 'mouseover'
-        canvas.focus()
-        return false
-      else if e.type == 'mouseout'
-        canvas.blur()
-        return false
-      true
-
-    handlekeydown = (e) ->
-      alert 'keycode: ' + e.keyCode
-      false
 
 
     mouseDownSelected = (e, shape) ->
@@ -249,7 +222,6 @@ $ ->
       return
 
     mouseUpSelected = (e) ->
-      console.log("mouseup")
       myState.dragTL = myState.dragTR = myState.dragBL = myState.dragBR = false
       return
 
@@ -316,7 +288,7 @@ $ ->
     # **** Options! ****
     @selectionColor = '#000000'
     @selectionWidth = 0.5
-    @interval = 30
+    @interval = 10
     setInterval (->
       myState.draw()
       return
@@ -339,7 +311,7 @@ $ ->
         byy = py - (blob.y2 / 2.5)
         bw = (blob.x2 - blob.x1) / 2.5
         bh = (blob.y2 - blob.y1) / 2.5
-        s.addShape new Shape(bx, byy, bw, bh,'rgba(127, 255, 212, .5)')
+        s.addShape new Shape(bx, byy, bw, bh,'rgba(127, 255, 212, .5)', blob.char)
 
     #     # c.x1, p - c.y2 , c.x2 - c.x1, c.y2 - c.y1
     #     console.log(blob)
@@ -358,16 +330,34 @@ $ ->
     Math.abs(p1 - p2) < closeEnough
 
   Shape::draw = (ctx) ->
-    ctx.fillStyle = @fill
-    ctx.fillRect @x, @y, @w, @h
+    ctx.beginPath();
+    ctx.strokeRect @x, @y, @w, @h
+    ctx.strokeStyle='rgba(0,0 ,255, .3)'
+    ctx.lineWidth="1"
+    ctx.stroke();
+    ctx.fill()
     if @selected == true
       @drawHandles ctx
     return
 
-  # Draw handles for resizing the Shape
+  Shape::drawChars = (ctx) ->
+    # ctx.fillStyle = 'rgba(0,0 ,0 , .1)';
+    ctx.save()
+    ctx.strokeStyle='black'
+    ctx.fillStyle = 'red'
+    ctx.lineWidth="1"
+    ctx.font = '27px bold,  Helvetica, sans-serif';
+    ctx.textBaseline = "middle"
+    tx = @x - (@w / 10)
+    ty = @y + (@h /1.5)
+    ctx.fillText(@char, tx , ty)
+    ctx.strokeText(@char, tx , ty)
+    ctx.restore()
 
+  # Draw handles for resizing the Shape
   Shape::drawHandles = (ctx) ->
     @close = 5
+    fill_inputs(this)
     drawRectWithBorder @x, @y, @close, ctx
     drawRectWithBorder @x + @w, @y, @close, ctx
     drawRectWithBorder @x + @w, @y + @h, @close, ctx
@@ -396,12 +386,16 @@ $ ->
   # Determine if a point is inside the shape's handles
 
   Shape::touchedAtHandles = (mx, my) ->
+
     # 1. top left handle
     if checkCloseEnough(mx, @x, @closeEnough) and checkCloseEnough(my, @y, @closeEnough)
+
       return true
     else if checkCloseEnough(mx, @x + @w, @closeEnough) and checkCloseEnough(my, @y, @closeEnough)
+
       return true
     else if checkCloseEnough(mx, @x, @closeEnough) and checkCloseEnough(my, @y + @h, @closeEnough)
+
       return true
     else if checkCloseEnough(mx, @x + @w, @closeEnough) and checkCloseEnough(my, @y + @h, @closeEnough)
       return true
@@ -415,8 +409,23 @@ $ ->
   CanvasState::removeShape = (shape) ->
     @shapes.splice(shape, 1)
     @valid = false
-    @selection = @shapes.indexOf(shape)
+    next = @shapes.indexOf(shape) + 1
+    @shapes[next].selected = true
+    @selection = @shapes[next]
     return
+
+  CanvasState::nextShape = (shape) ->
+    @valid = false
+    shape.selected = false
+    next = @shapes.indexOf(shape) + 1
+    @shapes[next].selected = true
+    @selection = @shapes[next]
+
+  CanvasState::changeShape = (shape) ->
+    blob = @shapes.indexOf(shape)
+    @shapes[blob] = shape
+    @selection = @shapes[blob]
+    @valid = false
 
   CanvasState::clear = ->
     @ctx.clearRect 0, 0, @width, @height
@@ -435,13 +444,6 @@ $ ->
 
       ctx.canvas.width = x
       ctx.canvas.height = y
-
-      # console.log(img.width)
-      # console.log(img.height)
-
-      # console.log(ctx.canvas.width)
-      # console.log(ctx.canvas.height)
-
       ctx.drawImage(img, 0, 0, x, y  )
 
       # ** Add stuff you want drawn in the background all the time here **
@@ -457,11 +459,11 @@ $ ->
             i++
             continue
           shapes[i].draw ctx
+          shapes[i].drawChars ctx
         i++
       # draw selected shape
       if @selection != null
         if this.selection.draw
-          console.log(this)
           @selection.draw ctx
       # draw selection
       # right now this is just a stroke along the edge of the selected Shape
@@ -513,41 +515,91 @@ $ ->
     ctx.restore()
     return
 
-  # ---
-  # generated by js2coffee 2.0.3
-
-  # res = (box) ->
-  #   result = $.grep(box, (e) ->
-  #     e.selected == true
-  #   )
-  #   result
-  #   return
-
-
-
-
-      # result = $.grep(box, (e) ->
-      #   e.selected == true
-      # )
-      # console.log(result[0])
-      # box.splice(box.indexOf(result), 1)
-      # console.log()
-      # console.log(box.indexOf(result))
-    return
   s = new CanvasState($('#canvas').get(0))
   init(s)
-  # console.log(s)
-  #
-  #
+
   seek_selected = ->
     for b in s.shapes
       if b
         if b.selected
           return b
 
-  fill_inputs = ->
-    s.draw($('#canvas').get(0))
-    return
+  fill_inputs = (blob) ->
+    $('#sx').val(parseInt(blob.x))
+    $('#sy').val(parseInt(blob.y))
+    $('#sw').val(parseInt(blob.w))
+    $('#sh').val(parseInt(blob.h))
+    $('#sc').val(blob.char)
+    $('#sc').focus()
+    $('#sc').select()
+
+  detect_input =(field) ->
+    blob = seek_selected()
+    input = $(field).val()
+    id = $(field).get(0).id
+    switch id
+      when "sc" then(
+        if blob
+          if blob.char != input
+            if input != ''
+              blob.char = input
+              s.nextShape(blob)
+              return true
+        )
+      when "sx" then(
+        if input > 0
+          if blob
+            blob.x = parseInt(input)
+            s.changeShape(blob)
+        )
+      when "sy" then(
+        if input > 0
+          if blob
+            blob.y = parseInt(input)
+            s.changeShape(blob)
+        )
+      when "sh" then(
+        if input > 0
+          if blob
+            blob.h = parseInt(input)
+            s.changeShape(blob)
+        )
+      when "sw" then(
+        if input > 0
+          if blob
+            blob.w = parseInt(input)
+            s.changeShape(blob)
+        )
+
+    # sel = s.shapes.indexOf(blob) + 1
+    # blob.selected = false
+    # s.shapes[sel].selected = true
+          #
+          #
+          #
+          # console.log(sel)
+          #
+          #
+          # console.log(s.shapes[sel].selected)
+          # # s.selection = s.shapes[sel]
+
+  $('#sc').change ->
+    detect_input(@)
+
+
+  $('#sx').change ->
+    detect_input(@)
+
+  $('#sy').change ->
+    detect_input(@)
+
+  $('#sw').change ->
+    detect_input(@)
+
+  $('#sh').change ->
+    detect_input(@)
+  # setInterval(detect_input, 100)
+
   $(document).bind 'keyup', (e) ->
     if e.keyCode == 46
       sel = seek_selected()

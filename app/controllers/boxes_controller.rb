@@ -38,6 +38,8 @@ class BoxesController < ApplicationController
 
   def destroy
     params[:chars]
+    @box = Box.find_by(id: params[:chars][:box])
+    @box.chars.find_by(id: params[:chars][:id]).delete
     respond_with @box do |format|
        format.json {render json: @char}
     end

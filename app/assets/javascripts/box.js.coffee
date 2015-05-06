@@ -405,17 +405,26 @@ $ ->
     @shapes.splice(shape, 1)
     @valid = false
     next = @shapes.indexOf(shape) + 1
-    @shapes[next].selected = true
-    @selection = @shapes[next]
-    eraser(shape)
+    if @shapes[next]
+      @shapes[next].selected = true
+      @selection = @shapes[next]
+    else
+      previous = next - 1
+      @shapes[previous].selected = true
+      @selection = @shapes[previous]
+
     return
 
   CanvasState::nextShape = (shape) ->
     @valid = false
     shape.selected = false
     next = @shapes.indexOf(shape) + 1
-    @shapes[next].selected = true
-    @selection = @shapes[next]
+    if @shapes[next]
+      @shapes[next].selected = true
+      @selection = @shapes[next]
+    else
+      @shapes[0].selected = true
+      @selection = @shapes[0]
 
   CanvasState::changeShape = (shape) ->
     blob = @shapes.indexOf(shape)
@@ -502,7 +511,6 @@ $ ->
     }
 
   # Draws a white rectangle with a black border around it
-
   drawRectWithBorder = (x, y, sideLength, ctx) ->
     ctx.save()
     ctx.fillStyle = '#000000'
@@ -588,6 +596,7 @@ $ ->
   $(document).bind 'keyup', (e) ->
     if e.keyCode == 46
       sel = seek_selected()
+      eraser(sel)
       s.removeShape(s.shapes.indexOf(sel))
 
 
@@ -605,7 +614,7 @@ $ ->
       data: partial
       success: (data) ->
         shape.id = data.id
-        console.log(shape.id)
+        # console.log(shape.id)
       dataType: "json"
 
 
@@ -614,27 +623,14 @@ $ ->
         # post = $.post('/boxes.json', partial, response, "json")
     post = $.ajax
       type: 'DELETE'
-      url: '/boxes.json'
+      url: window.location + ".json"
       data: partial
-      success: -> console.log(shape.id)
+      success: ->
+        # console.log(shape.id)
       dataType: "json"
 
 
 
   toJs = (obj) ->
-    # chars = []
-    # bl  = []
-    # bl[0] = "char"
-    # bl[1] = "x"
-    # bl[2] = "y"
-    # bl[3] = "w"
-    # bl[4] = "h"
-    # chars[0] = "chars"
-    # chars[1] = [ bl[0] , bl[1] , bl[2], bl[3], bl[4] ]
-
     jsonText = {"chars" : {"char": obj.char, "x" : obj.x * ratio , "y" : nh - (obj.y * ratio) , "w": obj.w * ratio  ,"h" : obj.h * ratio , "id" : obj.id, "box" : obj.box_id}}
-    console.log(jsonText)
     return jsonText
-
-
-  # setInterval(see, 1000)

@@ -6,7 +6,8 @@ Rails.application.routes.draw do
   # get 'box/show'
 
 
-  resources :box do
+  resources :boxes do
+
   end
 
   resources :trains do

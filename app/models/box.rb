@@ -25,7 +25,7 @@ class Box
   end
 
   def as_json(options = {})
-    options.merge(chars: chars.as_json)
+    options.merge(id: id.to_s, chars: chars.as_json)
   end
 
   def from_picture(picture, language = "nota")

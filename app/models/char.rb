@@ -11,6 +11,6 @@ class Char
   embedded_in :charctertable
 
   def as_json(options = {})
-    options.merge(char: char, x1: x1, y1: y1, x2: x2, y2: y2)
+    options.merge(id: id.to_s, char: char, x1: x1, y1: y1, x2: x2, y2: y2)
   end
 end

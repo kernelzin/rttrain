@@ -4,33 +4,11 @@ $ ->
   x =  p.width()
   y =  p.height()
 
-  # b = $('#canvas')
-  # b.width(x)
-  # b.height(y)
+  nw = p.get(0).naturalWidth
+  nh = p.get(0).naturalHeight
+
+  ratio = nw / x
   box = []
-  vv = false
-  # canvas = (c) ->
-  #   img = $('#picture').get(0)
-  #   cp = b.get(0).getContext('2d')
-  #   cp.canvas.width = img.naturalWidth
-  #   cp.canvas.height = img.naturalHeight
-  #   cp.drawImage(img, 0, 0)
-  #   pixel = cp.getImageData(0,0, img.width, img.height)
-  #   cp
-
-  # canvas()
-
-
-  blob = (c) ->
-    cp = $('#canvas').get(0).getContext('2d')
-    # cp.beginPath()
-    cp.strokeRect(c.x1, p - c.y2 , c.x2 - c.x1, c.y2 - c.y1)
-    # cp.fillStyle = 'yellow'
-    # cp.fill()
-    cp.lineWidth = 3
-    cp.strokeStyle = 'red'
-    cp.stroke()
-
   # Draws this shape to a given context
   # By Simon Sarris
   # www.simonsarris.com
@@ -45,7 +23,7 @@ $ ->
   # Constructor for Shape objects to hold data for all drawn objects.
   # For now they will just be defined as rectangles.
 
-  Shape = (x, y, w, h, fill, char) ->
+  Shape = (x, y, w, h, fill, char, id, box_id) ->
     # This is a very simple and unsafe constructor. All we're doing is checking if the values exist.
     # "x || 0" just means "if there is a value for x, use that. Otherwise use 0."
     # But we aren't checking anything else! We could put "Lalala" for the value of x
@@ -55,8 +33,10 @@ $ ->
     @h = h or 1
     @fill = fill or '#AAAAAA'
     @selected = false
-    @closeEnough = 10
+    @closeEnough = 5
     @char = char
+    @id = id
+    @box_id = box_id
     return
 
   CanvasState = (canvas) ->
@@ -82,7 +62,7 @@ $ ->
     @htmlTop = html.offsetTop
     @htmlLeft = html.offsetLeft
     # **** Keep track of state! ****
-    @valid = vv
+    @valid = false
     # when set to false, the canvas will redraw everything
     @shapes = box
     # the collection of things to be drawn
@@ -179,14 +159,15 @@ $ ->
 
 
     # double click for making new shapes
-    # canvas.addEventListener 'dblclick', ((e) ->
-    #   mouse = myState.getMouse(e)
-    #   r = Math.floor(Math.random() * 255)
-    #   g = Math.floor(Math.random() * 255)
-    #   b = Math.floor(Math.random() * 255)
-    #   myState.addShape new Shape(mouse.x - 10, mouse.y - 10, 20, 20, 'rgba(' + r + ',' + g + ',' + b + ',.6)')
-    #   return
-    # ), true
+    canvas.addEventListener 'dblclick', ((e) ->
+      mouse = myState.getMouse(e)
+      r = Math.floor(Math.random() * 255)
+      g = Math.floor(Math.random() * 255)
+      b = Math.floor(Math.random() * 255)
+      box_id = myState.shapes[0].box_id
+      myState.addShape new Shape(mouse.x - 10, mouse.y - 10, 20, 20, 'rgba()', "", undefined , box_id )
+      return
+    ), true
     # mouse down handler for selected state
 
 
@@ -301,17 +282,20 @@ $ ->
 
 
   init = (s) ->
-    px = p.get(0).naturalWidth / 2.5
-    py = p.get(0).naturalHeight / 2.5
+
+    px = p.get(0).naturalWidth / ratio
+    py = p.get(0).naturalHeight / ratio
+
 
     # s.addShape new Shape(221, py - 847.2 , 14.4, 26.4, 'rgba(127, 255, 212, .5)')
     $.getJSON window.location + ".json", (data) ->
+      box_id = data.id
       for blob in data.chars
-        bx = blob.x1 / 2.5
-        byy = py - (blob.y2 / 2.5)
-        bw = (blob.x2 - blob.x1) / 2.5
-        bh = (blob.y2 - blob.y1) / 2.5
-        s.addShape new Shape(bx, byy, bw, bh,'rgba(127, 255, 212, .5)', blob.char)
+        bx = blob.x1 / ratio
+        byy = py - (blob.y2 / ratio)
+        bw = (blob.x2 - blob.x1) / ratio
+        bh = (blob.y2 - blob.y1) / ratio
+        s.addShape new Shape(bx, byy, bw, bh,'rgba(127, 255, 212, .5)', blob.char, blob.id, data.id)
 
     #     # c.x1, p - c.y2 , c.x2 - c.x1, c.y2 - c.y1
     #     console.log(blob)
@@ -336,8 +320,21 @@ $ ->
     ctx.lineWidth="1"
     ctx.stroke();
     ctx.fill()
+    shape = this
     if @selected == true
+      poster(shape)
+      # partial = toJs(this)
+      # # post = $.post('/boxes.json', partial, response, "json")
+      # post = $.ajax
+      #   type: 'POST'
+      #   url: '/boxes.json'
+      #   data: partial
+      #   success: (data) ->
+      #     shape.id = data.id
+      #     console.log(shape.id)
+      #   dataType: "json"
       @drawHandles ctx
+
     return
 
   Shape::drawChars = (ctx) ->
@@ -356,7 +353,7 @@ $ ->
 
   # Draw handles for resizing the Shape
   Shape::drawHandles = (ctx) ->
-    @close = 5
+    @close = 10
     fill_inputs(this)
     drawRectWithBorder @x, @y, @close, ctx
     drawRectWithBorder @x + @w, @y, @close, ctx
@@ -367,8 +364,8 @@ $ ->
   # Determine if a point is inside the shape's bounds
 
   Shape::contains = (mx, my) ->
-    if @touchedAtHandles(mx, my) == true
-      return true
+    # if @touchedAtHandles(mx, my) == true
+    #   return true
     xBool = false
     yBool = false
     # All we have to do is make sure the Mouse X,Y fall in the area between
@@ -386,10 +383,8 @@ $ ->
   # Determine if a point is inside the shape's handles
 
   Shape::touchedAtHandles = (mx, my) ->
-
     # 1. top left handle
     if checkCloseEnough(mx, @x, @closeEnough) and checkCloseEnough(my, @y, @closeEnough)
-
       return true
     else if checkCloseEnough(mx, @x + @w, @closeEnough) and checkCloseEnough(my, @y, @closeEnough)
 
@@ -412,6 +407,7 @@ $ ->
     next = @shapes.indexOf(shape) + 1
     @shapes[next].selected = true
     @selection = @shapes[next]
+    eraser(shape)
     return
 
   CanvasState::nextShape = (shape) ->
@@ -425,6 +421,7 @@ $ ->
     blob = @shapes.indexOf(shape)
     @shapes[blob] = shape
     @selection = @shapes[blob]
+    poster(@shapes[blob])
     @valid = false
 
   CanvasState::clear = ->
@@ -543,6 +540,7 @@ $ ->
           if blob.char != input
             if input != ''
               blob.char = input
+              s.changeShape(blob)
               s.nextShape(blob)
               return true
         )
@@ -571,21 +569,8 @@ $ ->
             s.changeShape(blob)
         )
 
-    # sel = s.shapes.indexOf(blob) + 1
-    # blob.selected = false
-    # s.shapes[sel].selected = true
-          #
-          #
-          #
-          # console.log(sel)
-          #
-          #
-          # console.log(s.shapes[sel].selected)
-          # # s.selection = s.shapes[sel]
-
   $('#sc').change ->
     detect_input(@)
-
 
   $('#sx').change ->
     detect_input(@)
@@ -609,3 +594,47 @@ $ ->
   $('#nav').affix offset:
     top: $('#nav').offset().top
     bottom: $('footer').outerHeight(true) + $('.application').outerHeight(true) + 40
+
+
+  poster = (shape) ->
+    partial = toJs(shape)
+        # post = $.post('/boxes.json', partial, response, "json")
+    post = $.ajax
+      type: 'POST'
+      url: '/boxes.json'
+      data: partial
+      success: (data) ->
+        shape.id = data.id
+        console.log(shape.id)
+      dataType: "json"
+
+
+  eraser = (shape) ->
+    partial = toJs(shape)
+        # post = $.post('/boxes.json', partial, response, "json")
+    post = $.ajax
+      type: 'DELETE'
+      url: '/boxes.json'
+      data: partial
+      success: -> console.log(shape.id)
+      dataType: "json"
+
+
+
+  toJs = (obj) ->
+    # chars = []
+    # bl  = []
+    # bl[0] = "char"
+    # bl[1] = "x"
+    # bl[2] = "y"
+    # bl[3] = "w"
+    # bl[4] = "h"
+    # chars[0] = "chars"
+    # chars[1] = [ bl[0] , bl[1] , bl[2], bl[3], bl[4] ]
+
+    jsonText = {"chars" : {"char": obj.char, "x" : obj.x * ratio , "y" : nh - (obj.y * ratio) , "w": obj.w * ratio  ,"h" : obj.h * ratio , "id" : obj.id, "box" : obj.box_id}}
+    console.log(jsonText)
+    return jsonText
+
+
+  # setInterval(see, 1000)

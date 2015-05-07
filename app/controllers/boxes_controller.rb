@@ -45,6 +45,16 @@ class BoxesController < ApplicationController
     end
   end
 
+
+  def edit
+    resource
+    respond_to do |format|
+      format.html
+      format.json { render json:  @box }
+    end
+  end
+
+
   def show
     resource
     respond_to do |format|

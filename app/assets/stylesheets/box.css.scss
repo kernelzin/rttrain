@@ -17,3 +17,23 @@
     width: 213px;
     position: absolute;
 }
+
+.big {
+  font-size: 72px;
+}
+
+tr {
+  width: 100%;
+  display: inline-table;
+
+}
+
+table {
+  height: 300px;
+}
+tbody {
+  overflow-y: scroll;
+  height: 200px;
+  width: 100%;
+  position: absolute;
+}

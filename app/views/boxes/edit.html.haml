@@ -1,0 +1,61 @@
+%head
+%body{"data-spy" => "scroll", "data-target" => ".scrollspy"}
+  %input{:id => "js", :value => "box", :hidden => true}
+  %input{:id => "editjs", :value => "true", :hidden => true}
+  %br
+  .row
+    .col-md-8
+      = image_tag  @box.picture.data.jpg,  id: "picture",  hidden: true, width: "100%", crossOrigin: "anonymous"
+      %canvas{:id => "canvas"}
+    .col-md-4.scrollspy
+      %ul#nav.affix-top{"data-spy" => "affix"}
+        .row
+          .col-md-8
+            .row
+              .col-md-6
+                %label{:for => "sx"} x:
+                %input{:id => "sx", :type => "number", :min => "0", :maxlenght => "4", :style => "width: 5em"}
+              .col-md-6
+                %label{:for => "sy"} y:
+                %input{:id => "sy", :type => "number", :min => "0", :maxlenght => "4", :style => "width: 5em"}
+            %br
+            .row
+              .col-md-6
+                %label{:for => "sw"} w:
+                %input{:id => "sw", :type => "number", :min => "0", :maxlenght => "4", :style => "width: 5em"}
+              .col-md-6
+                %label{:for => "sh"} h:
+                %input{:id => "sh", :type => "number", :min => "0", :maxlenght => "4", :style => "width: 5em"}
+          .col-md-4
+            .row
+              .col-md-12
+                %label{:for => "sc"} char:
+                %input{:id => "sc", :type => "text", :min => "0", :size => "1", :maxlenght => "1", :class => "big"}
+
+
+        .row
+          .col-md-12
+            %h1 Box
+
+            %table.table.table-condensed.align-middle
+              %thead
+                %tr
+                  %th char
+                  %th x1
+                  %th y1
+                  %th x2
+                  %th y2
+              %tbody
+                - for char in @box.chars
+                  %tr
+                    %td
+                      %h6= char.char.to_s
+                    %td
+                      %h6= char.x1
+                    %td
+                      %h6= char.y1
+                    %td
+                      %h6= char.x2
+                    %td
+                      %h6= char.y2
+%footer

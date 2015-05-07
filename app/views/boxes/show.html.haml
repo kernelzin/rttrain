@@ -1,30 +1,31 @@
 %head
 %body{"data-spy" => "scroll", "data-target" => ".scrollspy"}
+  %input{:id => "js", :value => "box", :hidden => true}
   %br
   .row
     .col-md-7
       = image_tag  @box.picture.data.jpg,  id: "picture",  hidden: true, width: "100%"
       %canvas{:id => "canvas"}
     .col-md-2.scrollspy
-      %ul#nav.affix-top{"data-spy" => "affix"}
-        .row
-          .col-md-6
-            %label{:for => "sx"} x:
-            %input{:id => "sx", :type => "number", :min => "0", :maxlenght => "4", :style => "width: 5em"}
-          .col-md-6
-            %label{:for => "sy"} y:
-            %input{:id => "sy", :type => "number", :min => "0", :maxlenght => "4", :style => "width: 5em"}
-        .row
-          .col-md-6
-            %label{:for => "sw"} w:
-            %input{:id => "sw", :type => "number", :min => "0", :maxlenght => "4", :style => "width: 5em"}
-          .col-md-6
-            %label{:for => "sh"} h:
-            %input{:id => "sh", :type => "number", :min => "0", :maxlenght => "4", :style => "width: 5em"}
-        .row
-          .col-md-12
-            %label{:for => "sc"} char:
-            %input{:id => "sc", :type => "text", :min => "0", :size => "4", :maxlenght => "4"}
+      -# %ul#nav.affix-top{"data-spy" => "affix"}
+      -#   .row
+      -#     .col-md-6
+      -#       %label{:for => "sx"} x:
+      -#       %input{:id => "sx", :type => "number", :min => "0", :maxlenght => "4", :style => "width: 5em"}
+      -#     .col-md-6
+      -#       %label{:for => "sy"} y:
+      -#       %input{:id => "sy", :type => "number", :min => "0", :maxlenght => "4", :style => "width: 5em"}
+      -#   .row
+      -#     .col-md-6
+      -#       %label{:for => "sw"} w:
+      -#       %input{:id => "sw", :type => "number", :min => "0", :maxlenght => "4", :style => "width: 5em"}
+      -#     .col-md-6
+      -#       %label{:for => "sh"} h:
+      -#       %input{:id => "sh", :type => "number", :min => "0", :maxlenght => "4", :style => "width: 5em"}
+      -#   .row
+      -#     .col-md-12
+      -#       %label{:for => "sc"} char:
+      -#       %input{:id => "sc", :type => "text", :min => "0", :size => "4", :maxlenght => "4"}
     -# .col-md-2
     -#   %h1 Box
 

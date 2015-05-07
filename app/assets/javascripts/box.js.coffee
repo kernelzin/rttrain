@@ -679,7 +679,18 @@ $ ->
 
     $('.table > tbody > tr').click ->
       td = $(this).closest()
+      $('.table > tbody > tr').each ->
+        $(this).attr 'class', ''
+        return
+      $(this).attr 'class', 'active'
+
+
+      $(this).attr("class", "active");
+
+      # $(this).addClass('active');
       s.selectShape(td.context.children[1].textContent)
-      # console.log(td.context.children[1].textContent)
+      # $(this).addClass('highlight')
+      # $(this).effect("highlight", {}, 1500);
+      console.log(td)
       # console.log(td)
     return

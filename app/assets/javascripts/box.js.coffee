@@ -599,6 +599,8 @@ $ ->
     $('#sh').change ->
       detect_input(@)
     # setInterval(detect_input, 100)
+    #
+    $('#tbody').append '<tr><td>' + 'result'+ '</td></tr>'
 
     $(document).bind 'keyup', (e) ->
       if e.keyCode == 46
@@ -645,6 +647,12 @@ $ ->
     toJs = (obj) ->
       jsonText = {"chars" : {"char": obj.char, "x" : obj.x * ratio , "y" : nh - (obj.y * ratio) , "w": obj.w * ratio  ,"h" : obj.h * ratio , "id" : obj.id, "box" : obj.box_id}}
       return jsonText
+
+
+    $('.table > tbody > tr').click ->
+      td = $(this).closest()
+      console.log(td)
+    return
 
 
 

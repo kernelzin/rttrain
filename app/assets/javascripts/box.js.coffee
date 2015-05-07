@@ -306,11 +306,12 @@ $ ->
 
 
     init = (s) ->
-
+      console.log("init")
       px = p.get(0).naturalWidth / ratio
       py = p.get(0).naturalHeight / ratio
 
       $.getJSON window.location + ".json", (data) ->
+        console.log(data)
         box_id = data.id
         for blob in data.chars
           bx = blob.x1 / ratio
@@ -402,6 +403,27 @@ $ ->
           e.target.style.cursor = 'nwse-resize'
         return true
       return
+
+    CanvasState::selectShape = (shape) ->
+      select_shape = (shape) ->
+      result =  @shapes.filter (result) ->
+        return  result.id == shape
+
+
+      prev = seek_selected()
+
+      unless prev
+        console.log("nada")
+        @selection = result[0]
+        result[0].selected = true
+        this.valid = false
+      if result[0] != prev and prev != undefined
+        console.log(prev)
+        prev.selected = false
+        prev.valid = true
+
+      console.log(this)
+
 
     CanvasState::addShape = (shape) ->
       @shapes.push shape
@@ -584,6 +606,10 @@ $ ->
               s.changeShape(blob)
           )
 
+    s = new CanvasState($('#canvas').get(0))
+    init(s)
+
+
     $('#sc').change ->
       detect_input(@)
 
@@ -612,6 +638,8 @@ $ ->
     $('#nav').affix offset:
       top: $('#nav').offset().top
       bottom: $('footer').outerHeight(true) + $('.application').outerHeight(true) + 40
+
+
 
 
     poster = (shape) ->
@@ -651,10 +679,7 @@ $ ->
 
     $('.table > tbody > tr').click ->
       td = $(this).closest()
-      console.log(td)
+      s.selectShape(td.context.children[1].textContent)
+      # console.log(td.context.children[1].textContent)
+      # console.log(td)
     return
-
-
-
-    s = new CanvasState($('#canvas').get(0))
-    init(s)

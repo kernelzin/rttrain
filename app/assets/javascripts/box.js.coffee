@@ -1,7 +1,7 @@
 $ ->
   bx = $('#js').val()
   be = $('#editjs').val()
-
+  ctr = undefined
   if bx == "box"
 
     p = $('#picture')
@@ -311,7 +311,6 @@ $ ->
       py = p.get(0).naturalHeight / ratio
 
       $.getJSON window.location + ".json", (data) ->
-        console.log(data)
         box_id = data.id
         for blob in data.chars
           bx = blob.x1 / ratio
@@ -329,8 +328,8 @@ $ ->
     Shape::draw = (ctx) ->
       ctx.beginPath();
       ctx.strokeRect @x, @y, @w, @h
-      ctx.strokeStyle='blue'
-      ctx.lineWidth="0.5"
+      ctx.strokeStyle='green'
+      ctx.lineWidth="2"
       ctx.stroke();
       ctx.fill()
       shape = this
@@ -357,6 +356,7 @@ $ ->
     Shape::drawHandles = (ctx) ->
       @close = 5
       fill_inputs(this)
+      select_row(this)
       drawRectWithBorder @x, @y, @close, ctx
       drawRectWithBorder @x + @w, @y, @close, ctx
       drawRectWithBorder @x + @w, @y + @h, @close, ctx
@@ -413,16 +413,12 @@ $ ->
       prev = seek_selected()
 
       unless prev
-        console.log("nada")
         @selection = result[0]
         result[0].selected = true
         this.valid = false
       if result[0] != prev and prev != undefined
-        console.log(prev)
         prev.selected = false
         prev.valid = true
-
-      console.log(this)
 
 
     CanvasState::addShape = (shape) ->
@@ -558,6 +554,21 @@ $ ->
           if b.selected
             return b
 
+    select_row = (char) ->
+      $('.table > tbody > tr').each ->
+        tbody =  $('.table > tbody')
+
+        if char.id == $(this).context.children[1].textContent
+          clear_tab()
+          $(this).attr("class", "active");
+          tbody.scrollTop(0)
+          tbody.scrollTop($(this).position().top)
+
+       # find('tr').removeClass('active').eq(char).addClass('active');
+
+      # return row
+
+
     fill_inputs = (blob) ->
       $('#sx').val(parseInt(blob.x))
       $('#sy').val(parseInt(blob.y))
@@ -578,8 +589,9 @@ $ ->
               if input != ''
                 blob.char = input
                 s.changeShape(blob)
-                s.nextShape(blob)
-                return true
+            else
+              s.nextShape(blob)
+
           )
         when "sx" then(
           if input > 0
@@ -624,12 +636,47 @@ $ ->
 
     $('#sh').change ->
       detect_input(@)
-    # setInterval(detect_input, 100)
-    #
-    $('#tbody').append '<tr><td>' + 'result'+ '</td></tr>'
+
+    $('#sc').bind 'keyup', (e) ->
+      shape = seek_selected()
+      sx = parseInt(shape.x)
+      sy = parseInt(shape.y)
+      sw = parseInt(shape.w)
+      sh = parseInt(shape.h)
+      e.preventDefault
+      if  e.ctrlKey && ( e.which == 38 )
+        shape.h = sh + 1
+        s.changeShape(shape)
+      switch
+        when e.keyCode == 13  then(
+          s.nextShape(shape)
+        )
+        when e.keyCode == 38 then(
+          shape.y = sy - 1
+          s.changeShape(shape)
+        )
+        when e.keyCode == 40 then(
+
+          shape.y = sy + 1
+          s.changeShape(shape)
+        )
+        when e.keyCode == 39 then(
+          e.preventDefault
+          shape.x = sx + 1
+          s.changeShape(shape)
+        )
+        when e.keyCode == 37 then(
+          e.preventDefault
+          shape.x = sx - 1
+          s.changeShape(shape)
+        )
+
+
 
     $(document).bind 'keyup', (e) ->
       if e.keyCode == 46
+        if ctr
+          ctr.remove()
         sel = seek_selected()
         eraser(sel)
         s.removeShape(s.shapes.indexOf(sel))
@@ -638,8 +685,6 @@ $ ->
     $('#nav').affix offset:
       top: $('#nav').offset().top
       bottom: $('footer').outerHeight(true) + $('.application').outerHeight(true) + 40
-
-
 
 
     poster = (shape) ->
@@ -658,8 +703,6 @@ $ ->
     eraser = (shape) ->
       l = window.location.href
       ll = l.substring(0, l.length - 5) + ".json"
-
-      console.log(ll)
       partial = toJs(shape)
           # post = $.post('/boxes.json', partial, response, "json")
       post = $.ajax
@@ -677,20 +720,26 @@ $ ->
       return jsonText
 
 
-    $('.table > tbody > tr').click ->
-      td = $(this).closest()
+
+    clear_tab = ->
       $('.table > tbody > tr').each ->
+        # console.log($(this).offset().top)
         $(this).attr 'class', ''
         return
-      $(this).attr 'class', 'active'
 
-
-      $(this).attr("class", "active");
-
+    $('.table > tbody > tr').click ->
+      $(this).preventDefault
+      clear_tab()
+      td = $(this).closest()
       # $(this).addClass('active');
       s.selectShape(td.context.children[1].textContent)
+      $(this).attr("class", "active");
       # $(this).addClass('highlight')
       # $(this).effect("highlight", {}, 1500);
-      console.log(td)
       # console.log(td)
+      # console.log(td)
+      # console.log($(this).offsetParent())
+      # tbody.scrollTop(17899)
+
+
     return

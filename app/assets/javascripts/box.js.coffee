@@ -86,17 +86,6 @@ $ ->
       myState = this
       #fixes a problem where double clicking causes text to get selected on the canvas
       if be == "true"
-        # canvas.addEventListener 'mouseover', ((e) ->
-        #   mouse = myState.getMouse(e)
-        #   sel = seek_selected()
-        #   mx = mouse.x
-        #   my = mouse.y
-        #   console.log(sel)
-        #   if sel.contains(mx, my)
-        #     console.log("perto")
-        #   return
-        # ), true
-
         canvas.addEventListener 'selectstart', ((e) ->
           e.preventDefault()
           false
@@ -159,9 +148,6 @@ $ ->
           my = mouse.y
           if myState.selection
             myState.selection.touchedAtHandles(mx,my, e)
-            # console.log(mx)
-            # console.log(my)
-
           if myState.dragging
             mouse = myState.getMouse(e)
             # We don't want to drag the object by its top-left corner, we want to drag it
@@ -306,7 +292,6 @@ $ ->
 
 
     init = (s) ->
-      console.log("init")
       px = p.get(0).naturalWidth / ratio
       py = p.get(0).naturalHeight / ratio
 
@@ -408,10 +393,7 @@ $ ->
       select_shape = (shape) ->
       result =  @shapes.filter (result) ->
         return  result.id == shape
-
-
       prev = seek_selected()
-
       unless prev
         @selection = result[0]
         result[0].selected = true
@@ -420,25 +402,19 @@ $ ->
         prev.selected = false
         prev.valid = true
 
-
     CanvasState::addShape = (shape) ->
       @shapes.push shape
       @valid = false
       return
 
     CanvasState::removeShape = (shape) ->
+      next = @shapes.indexOf(shape) + 1
       @shapes.splice(shape, 1)
       @valid = false
-      next = @shapes.indexOf(shape) + 1
+
       if @shapes[next]
         @shapes[next].selected = true
         @selection = @shapes[next]
-      else
-        previous = next - 1
-        @shapes[previous].selected = true
-        @selection = @shapes[previous]
-
-      return
 
     CanvasState::nextShape = (shape) ->
       @valid = false
@@ -564,11 +540,6 @@ $ ->
           tbody.scrollTop(0)
           tbody.scrollTop($(this).position().top)
 
-       # find('tr').removeClass('active').eq(char).addClass('active');
-
-      # return row
-
-
     fill_inputs = (blob) ->
       $('#sx').val(parseInt(blob.x))
       $('#sy').val(parseInt(blob.y))
@@ -644,34 +615,45 @@ $ ->
       sw = parseInt(shape.w)
       sh = parseInt(shape.h)
       e.preventDefault
-      if  e.ctrlKey && ( e.which == 38 )
-        shape.h = sh + 1
-        s.changeShape(shape)
+
       switch
+        when e.keyCode == 38 && e.ctrlKey  then(
+          shape.h = sh + 1
+          s.changeShape(shape)
+        )
+        when e.ctrlKey &&  e.which == 40 then (
+          shape.h = sh - 1
+          s.changeShape(shape)
+        )
+        when e.ctrlKey &&  e.which == 37 then (
+          shape.w = sw - 1
+          s.changeShape(shape)
+        )
+        when e.ctrlKey &&  e.which == 39 then (
+          shape.w = sw + 1
+          s.changeShape(shape)
+        )
         when e.keyCode == 13  then(
           s.nextShape(shape)
         )
-        when e.keyCode == 38 then(
+        when e.keyCode == 38 && !e.ctrlKey  then(
           shape.y = sy - 1
           s.changeShape(shape)
         )
-        when e.keyCode == 40 then(
-
+        when e.keyCode == 40 && !e.ctrlKey then(
           shape.y = sy + 1
           s.changeShape(shape)
         )
-        when e.keyCode == 39 then(
+        when e.keyCode == 39 && !e.ctrlKey then(
           e.preventDefault
           shape.x = sx + 1
           s.changeShape(shape)
         )
-        when e.keyCode == 37 then(
+        when e.keyCode == 37 && !e.ctrlKey then(
           e.preventDefault
           shape.x = sx - 1
           s.changeShape(shape)
         )
-
-
 
     $(document).bind 'keyup', (e) ->
       if e.keyCode == 46
@@ -680,7 +662,6 @@ $ ->
         sel = seek_selected()
         eraser(sel)
         s.removeShape(s.shapes.indexOf(sel))
-
 
     $('#nav').affix offset:
       top: $('#nav').offset().top
@@ -696,7 +677,6 @@ $ ->
         data: partial
         success: (data) ->
           shape.id = data.id
-          # console.log(shape.id)
         dataType: "json"
 
 
@@ -704,26 +684,21 @@ $ ->
       l = window.location.href
       ll = l.substring(0, l.length - 5) + ".json"
       partial = toJs(shape)
-          # post = $.post('/boxes.json', partial, response, "json")
       post = $.ajax
         type: 'DELETE'
         url: ll
         data: partial
         success: ->
-          # console.log(shape.id)
-        dataType: "json"
 
+        dataType: "json"
 
 
     toJs = (obj) ->
       jsonText = {"chars" : {"char": obj.char, "x" : obj.x * ratio , "y" : nh - (obj.y * ratio) , "w": obj.w * ratio  ,"h" : obj.h * ratio , "id" : obj.id, "box" : obj.box_id}}
       return jsonText
 
-
-
     clear_tab = ->
       $('.table > tbody > tr').each ->
-        # console.log($(this).offset().top)
         $(this).attr 'class', ''
         return
 
@@ -731,15 +706,8 @@ $ ->
       $(this).preventDefault
       clear_tab()
       td = $(this).closest()
-      # $(this).addClass('active');
+
       s.selectShape(td.context.children[1].textContent)
       $(this).attr("class", "active");
-      # $(this).addClass('highlight')
-      # $(this).effect("highlight", {}, 1500);
-      # console.log(td)
-      # console.log(td)
-      # console.log($(this).offsetParent())
-      # tbody.scrollTop(17899)
-
-
+      $(this).attr("class", "current");
     return

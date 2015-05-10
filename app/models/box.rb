@@ -48,4 +48,11 @@ class Box
     end
   end
 
+  def to_file
+    File.open "/tmp/#{picf.train.name}/#{my_name}.box", 'w' do |file|
+      chars.each do |c|
+        file.puts "#{c.char} #{c.x1} #{c.y1} #{c.x2} #{c.y2} 0"
+      end
+    end
+  end
 end

@@ -27,7 +27,7 @@ $ ->
     # Constructor for Shape objects to hold data for all drawn objects.
     # For now they will just be defined as rectangles.
 
-    Shape = (x, y, w, h, fill, char, id, box_id) ->
+    Shape = (x, y, w, h, char, id, box_id, fail) ->
       # This is a very simple and unsafe constructor. All we're doing is checking if the values exist.
       # "x || 0" just means "if there is a value for x, use that. Otherwise use 0."
       # But we aren't checking anything else! We could put "Lalala" for the value of x
@@ -35,12 +35,12 @@ $ ->
       @y = y or 0
       @w = w or 1
       @h = h or 1
-      @fill = fill or '#AAAAAA'
       @selected = false
       @closeEnough = 5
       @char = char
       @id = id
       @box_id = box_id
+      @fail = fail
       return
 
     CanvasState = (canvas) ->
@@ -190,6 +190,7 @@ $ ->
         #
         #
         #
+        console.log(shape)
         if self.w == undefined
           self.x = mouseY
           self.y = mouseX
@@ -296,13 +297,15 @@ $ ->
       py = p.get(0).naturalHeight / ratio
 
       $.getJSON window.location + ".json", (data) ->
+
         box_id = data.id
         for blob in data.chars
           bx = blob.x1 / ratio
           byy = py - (blob.y2 / ratio)
           bw = (blob.x2 - blob.x1) / ratio
           bh = (blob.y2 - blob.y1) / ratio
-          s.addShape new Shape(bx, byy, bw, bh,'rgba(127, 255, 212, .5)', blob.char, blob.id, data.id)
+          s.addShape new Shape(bx, byy, bw, bh, blob.char, blob.id, data.id, blob.fail)
+
       return
 
     # checks if two points are close enough to each other depending on the closeEnough param
@@ -311,12 +314,14 @@ $ ->
       Math.abs(p1 - p2) < closeEnough
 
     Shape::draw = (ctx) ->
-      ctx.beginPath();
-      ctx.strokeRect @x, @y, @w, @h
-      ctx.strokeStyle='green'
-      ctx.lineWidth="2"
-      ctx.stroke();
-      ctx.fill()
+      unless @fail
+        ctx.beginPath()
+        ctx.strokeRect @x, @y, @w, @h
+        ctx.strokeStyle='green'
+        ctx.lineWidth="2"
+        ctx.stroke();
+        ctx.fill()
+        ctx.closePath()
       shape = this
       if @selected == true
         poster(shape)
@@ -336,6 +341,16 @@ $ ->
       ctx.fillText(@char, tx , ty)
       ctx.strokeText(@char, tx , ty)
       ctx.restore()
+
+    Shape::drawFail = (ctx) ->
+      if @fail
+        ctx.beginPath();
+        ctx.rect @x, @y, @w, @h
+        ctx.strokeStyle= 'red'
+        ctx.lineWidth="2"
+        ctx.stroke();
+
+
 
     # Draw handles for resizing the Shape
     Shape::drawHandles = (ctx) ->
@@ -403,18 +418,27 @@ $ ->
         prev.valid = true
 
     CanvasState::addShape = (shape) ->
+      console.log(shape.state)
       @shapes.push shape
       @valid = false
       return
 
     CanvasState::removeShape = (shape) ->
-      next = @shapes.indexOf(shape) + 1
+      prev = shape - 1
+      row =  select_row(@shapes[shape])
+
+      row.each ->
+        if $(this).hasClass("active")
+          $(this).remove()
+
       @shapes.splice(shape, 1)
       @valid = false
-
-      if @shapes[next]
-        @shapes[next].selected = true
-        @selection = @shapes[next]
+      if @shapes[shape]
+        @shapes[shape].selected = true
+        @selection = @shapes[shape]
+      else
+        @shapes[prev].selected = true
+        @selection = @shapes[prev]
 
     CanvasState::nextShape = (shape) ->
       @valid = false
@@ -467,6 +491,7 @@ $ ->
               continue
             shapes[i].draw ctx
             shapes[i].drawChars ctx
+            shapes[i].drawFail ctx
           i++
         # draw selected shape
         if @selection != null
@@ -530,17 +555,20 @@ $ ->
           if b.selected
             return b
 
+
     select_row = (char) ->
       $('.table > tbody > tr').each ->
         tbody =  $('.table > tbody')
-
         if char.id == $(this).context.children[1].textContent
           clear_tab()
           $(this).attr("class", "active");
           tbody.scrollTop(0)
           tbody.scrollTop($(this).position().top)
+          if $(this).hasClass("active")
+            return $(this)
 
     fill_inputs = (blob) ->
+      console.log(blob)
       $('#sx').val(parseInt(blob.x))
       $('#sy').val(parseInt(blob.y))
       $('#sw').val(parseInt(blob.w))
@@ -667,10 +695,8 @@ $ ->
       top: $('#nav').offset().top
       bottom: $('footer').outerHeight(true) + $('.application').outerHeight(true) + 40
 
-
     poster = (shape) ->
       partial = toJs(shape)
-          # post = $.post('/boxes.json', partial, response, "json")
       post = $.ajax
         type: 'POST'
         url: '/boxes.json'
@@ -678,7 +704,6 @@ $ ->
         success: (data) ->
           shape.id = data.id
         dataType: "json"
-
 
     eraser = (shape) ->
       l = window.location.href
@@ -691,7 +716,6 @@ $ ->
         success: ->
 
         dataType: "json"
-
 
     toJs = (obj) ->
       jsonText = {"chars" : {"char": obj.char, "x" : obj.x * ratio , "y" : nh - (obj.y * ratio) , "w": obj.w * ratio  ,"h" : obj.h * ratio , "id" : obj.id, "box" : obj.box_id}}
@@ -706,7 +730,6 @@ $ ->
       $(this).preventDefault
       clear_tab()
       td = $(this).closest()
-
       s.selectShape(td.context.children[1].textContent)
       $(this).attr("class", "active");
       $(this).attr("class", "current");

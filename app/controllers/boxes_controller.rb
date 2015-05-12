@@ -45,7 +45,6 @@ class BoxesController < ApplicationController
     end
   end
 
-
   def edit
     resource
     respond_to do |format|
@@ -53,7 +52,6 @@ class BoxesController < ApplicationController
       format.json { render json:  @box }
     end
   end
-
 
   def show
     resource
@@ -63,6 +61,16 @@ class BoxesController < ApplicationController
 
     end
   end
+
+  def tr
+    resource.to_tr
+    f = resource.chars.where(fail: true)
+    respond_to do |format|
+      format.html
+      format.json { render json: f }
+    end
+  end
+
   private
 
   def permitted_params

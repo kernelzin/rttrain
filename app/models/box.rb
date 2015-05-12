@@ -15,10 +15,6 @@ class Box
     picture.font
   end
 
-  # def picturize
-  #   from_picture(picture)
-  # end
-
   def as_json(options = {})
     options.merge(id: id.to_s, chars: chars.as_json)
   end
@@ -48,15 +44,28 @@ class Box
     end
   end
 
-  def to_tf
-    from_file
+  def to_tr
+    to_file
     file = "/tmp/#{picf.train.name}/#{my_name}"
     unless File.exist?("#{file}.jpg")
       download_pic
     end
-    stdin, stdout, stderr, wait_thread = Open3.popen3('tesseract /tmp/nota/nota.bematech4000.exp0.jpg /tmp/nota/nota.bematech4000.exp0 box.train.stderr')
-    chars = stderr.gets(nil)
+    stdin, stdout, stderr, wait_thread = Open3.popen3("tesseract #{path}/#{filename} #{file} box.train.stderr")
+    c = stderr.gets(nil)
     stderr.close()
+    c = c.scan(/\((\d+),(\d*)\),\((\d+),(\d+)\)/)
+    p c
+    if c.is_a?(Array)
+      c.each do |cc|
+        p chars.where(:x1 => cc[0].to_i,
+                      :y1 => cc[1].to_i,
+                      :x2 => cc[2].to_i,
+                      :y2 => cc[3].to_i).first.update_attributes(fail: true)
+      end
+    else
+      c
+      p c
+    end
   end
 
 

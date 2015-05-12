@@ -3,10 +3,10 @@ class Char
   include Mongoid::Document
 
   field :char
-  field :x1
-  field :x2
-  field :y1
-  field :y2
+  field :x1, type: Integer
+  field :x2, type: Integer
+  field :y1, type: Integer
+  field :y2, type: Integer
   field :fail, default: false
 
   embedded_in :charctertable

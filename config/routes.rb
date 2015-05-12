@@ -7,7 +7,9 @@ Rails.application.routes.draw do
 
 
   resources :boxes do
-
+    member do
+      get :tr
+    end
   end
 
   resources :trains do

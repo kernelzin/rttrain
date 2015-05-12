@@ -40,7 +40,7 @@ $ ->
       @char = char
       @id = id
       @box_id = box_id
-      @fail = fail
+      @fail = fail or false
       return
 
     CanvasState = (canvas) ->
@@ -175,7 +175,7 @@ $ ->
           g = Math.floor(Math.random() * 255)
           b = Math.floor(Math.random() * 255)
           box_id = myState.shapes[0].box_id
-          myState.addShape new Shape(mouse.x - 10, mouse.y - 10, 20, 20, 'rgba()', "", undefined , box_id )
+          myState.addShape new Shape(mouse.x - 10, mouse.y - 10, 20, 20, "", undefined , box_id, false)
           return
         ), true
         # mouse down handler for selected state
@@ -297,7 +297,6 @@ $ ->
       py = p.get(0).naturalHeight / ratio
 
       $.getJSON window.location + ".json", (data) ->
-
         box_id = data.id
         for blob in data.chars
           bx = blob.x1 / ratio
@@ -305,7 +304,6 @@ $ ->
           bw = (blob.x2 - blob.x1) / ratio
           bh = (blob.y2 - blob.y1) / ratio
           s.addShape new Shape(bx, byy, bw, bh, blob.char, blob.id, data.id, blob.fail)
-
       return
 
     # checks if two points are close enough to each other depending on the closeEnough param
@@ -344,13 +342,14 @@ $ ->
 
     Shape::drawFail = (ctx) ->
       if @fail
+        ctx.save()
         ctx.beginPath();
         ctx.rect @x, @y, @w, @h
         ctx.strokeStyle= 'red'
         ctx.lineWidth="2"
         ctx.stroke();
-
-
+        ctx.closePath()
+        ctx.restore()
 
     # Draw handles for resizing the Shape
     Shape::drawHandles = (ctx) ->
@@ -418,7 +417,6 @@ $ ->
         prev.valid = true
 
     CanvasState::addShape = (shape) ->
-      console.log(shape.state)
       @shapes.push shape
       @valid = false
       return
@@ -733,4 +731,23 @@ $ ->
       s.selectShape(td.context.children[1].textContent)
       $(this).attr("class", "active");
       $(this).attr("class", "current");
+
+
+    $('#totr').click ->
+      l = window.location.href
+      ll = l.substring(0, l.length - 5) + "/tr"
+      console.log(ll)
+      post = $.ajax
+        type: 'GET'
+        url: ll
+        success: (data) -> (
+          for blob in data
+            result =  s.shapes.filter (result) ->
+              return  result.id == blob.id
+            result[0].fail = true
+            s.changeShape(result[0])
+        )
+        dataType: "json"
+
+      console.log("cliquei")
     return

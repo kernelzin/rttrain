@@ -59,7 +59,7 @@ th{
 
 tbody {
     overflow-y: scroll;
-    height: 500px;
+    height: 450px;
     position: absolute;
     width: 100%;
 }
@@ -69,4 +69,8 @@ table {
     position: absolute;
     width: 100%;
 
+}
+button {
+    position: absolute;
+    top: 500px;
 }

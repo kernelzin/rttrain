@@ -9,12 +9,12 @@ class TrainsController < ApplicationController
     end
   end
 
- def resource
+  def resource
     @train = Train.find(params[:id])
   end
 
   def new
-
+    @train = Train.new
   end
 
   def create
@@ -26,7 +26,6 @@ class TrainsController < ApplicationController
     respond_to do |format|
       format.html
       format.json { render json:  @train }
-
     end
   end
 end

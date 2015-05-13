@@ -1,0 +1,16 @@
+= form_for(@train, :html => {:class => "form", :multipart => true}) do |f|
+  %h1 New Train
+  .row
+    .col-md-6
+      = ftext f, :name #, class: "input-auto"
+    .col-md-6
+      %button{ :type => 'submit'} Salvar
+
+  .row
+    .col-md-12
+      %fieldset
+        %legend Fonts
+        .group
+          = f.fields_for :fonts do |c|
+            = render :partial => "fonts/form", :locals => {f: c}
+          = link_to_add_association "+ Add Font", f, :fonts, :partial => 'fonts/form', :class => 'btn btn-default btn-block'

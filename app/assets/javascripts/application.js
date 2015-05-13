@@ -15,6 +15,7 @@
 //= require turbolinks
 //= require jquery.turbolinks
 //= require bootstrap
+//= require cocoon
 //= require box
 //= require picture
 //= require_tree .

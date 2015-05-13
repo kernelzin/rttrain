@@ -14,11 +14,13 @@ class TrainsController < ApplicationController
   end
 
   def new
-
+    @train =  Train.new
   end
 
   def create
-
+    @train = Train.new(permitted_params)
+    render "new"
+    @train.save
   end
 
   def show
@@ -28,5 +30,9 @@ class TrainsController < ApplicationController
       format.json { render json:  @train }
 
     end
+  end
+  private
+  def permitted_params
+    params.require(:train).permit(:name, fonts_attributes: [:name, :italic, :bold, :fixed, :serif, :fraktur, :_destroy])
   end
 end

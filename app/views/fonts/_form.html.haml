@@ -1,0 +1,10 @@
+.nested-fields
+  %fieldset.font
+    .row
+      .col-md-offset-5.col-md-1.tcenter= link_to_remove_association "&times;".html_safe, f, :class => "close"
+    .row
+      .col-md-3
+        = ftext f, :name #, class: "input-auto"
+      .col-md-3
+        - [:italic, :bold, :fixed, :serif, :fraktur].each do |c|
+          = fcheck f, c

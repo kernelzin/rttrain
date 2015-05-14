@@ -11,7 +11,12 @@ class Char
 
   embedded_in :charctertable
 
-  # validates_uniqueness_of :x1, :x2, :y1, :y2, :scope => :box_id
+  # validates_uniqueness_of x1 + x2 + y1 + y2
+
+  def blob
+    "#{x1},#{y1},#{x2},#{y2}"
+  end
+
 
   def as_json(options = {})
     options.merge(id: id.to_s, char: char, x1: x1, y1: y1, x2: x2, y2: y2, fail: fail)

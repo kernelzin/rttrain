@@ -1,0 +1,18 @@
+.nested-fields
+  .row.b
+    .col-md-12
+      .row
+        .col-md-offset-11.col-md-1.tcenter= link_to_remove_association "&times;".html_safe, f, :class => "close"
+      .row
+        .col-md-12
+          .field
+            = ffile f, :data, id: "imgInp", type: "file"
+            %img#blah{:alt => "your image", :src => "#{link_image(f)}",:width => "25%"}
+          -# %input#imgInp{:type => "file"}
+          -#   = ftext f, :name #, class: "input-auto"
+          -# .col-md-3
+          -#   - [:italic, :bold, :fixed, :serif, :fraktur].each do |c|
+          -#     = fcheck f, c
+      .row
+        .col-md-12
+          %hr

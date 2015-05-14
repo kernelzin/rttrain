@@ -1,10 +1,26 @@
 .nested-fields
-  %fieldset.font
+  .row.b
+    .col-md-12
+      .row
+        .col-md-offset-11.col-md-1= link_to_remove_association "&times;".html_safe, f, :class => "close"
+        .col-md-2
+          .field
+            = ftext f, :name #, class: "input-auto"
+        .col-md-7
+          .row
+            - [:italic, :bold, :fixed, :serif, :fraktur].each do |c|
+              .col-md-1
+                = fcheck f, c
+      .row.b
+        .col-md-12
+          .field
+            %legend Pictures
+            #pictures
+              = f.fields_for :pictures  do |c|
+                = render :partial => "pictures/form", :locals => {f: c}
+              .links
+                = link_to_add_association "+ Add Picture", f, :pictures, :partial => 'pictures/form', :class => 'btn btn-default btn-block'
+                %br
     .row
-      .col-md-offset-5.col-md-1.tcenter= link_to_remove_association "&times;".html_safe, f, :class => "close"
-    .row
-      .col-md-3
-        = ftext f, :name #, class: "input-auto"
-      .col-md-3
-        - [:italic, :bold, :fixed, :serif, :fraktur].each do |c|
-          = fcheck f, c
+      .col-md-12
+        %br

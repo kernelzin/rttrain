@@ -2,9 +2,10 @@
 %p Nice Traines to train
 
 - for train in @trains
-  %h6= link_to train.name, train
+  %h6= link_to train.name, edit_train_path(train)
   - for font in train.fonts
     %h6= link_to "-#{font.name}", font
     - for picture in font.pictures
       %h6= link_to "--#{picture.name}", edit_picture_path(picture)
-      %h6= link_to "--#{picture.box.chars.count}", edit_box_path(picture.box)
+      - if picture.box
+        %h6= link_to "--#{picture.box.chars.count}", edit_box_path(picture.box)

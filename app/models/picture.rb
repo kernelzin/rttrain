@@ -12,9 +12,9 @@ class Picture
 
   belongs_to :font
 
-  after_save :boxer
-
   before_save :namez
+
+  after_update :boxer
 
   def namez
     write_attribute(:name, my_name)

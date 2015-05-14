@@ -32,7 +32,7 @@ class Box
     file = "/tmp/#{picf.train.name}/#{my_name}.box"
     File.open(file).read.each_line do |l|
       c, x1, y1, x2,y2 = l.split(' ')
-      chars.create(char: c, x1: x1, y1: y1, x2: x2, y2: y2)
+      chars.find_or_create_by(char: c, x1: x1, y1: y1, x2: x2, y2: y2)
     end
   end
 

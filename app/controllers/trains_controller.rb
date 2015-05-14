@@ -23,6 +23,15 @@ class TrainsController < ApplicationController
     @train.save
   end
 
+  def edit
+    resource
+  end
+
+  def update
+    resource.update_attributes(permitted_params)
+    redirect_to trains_path
+  end
+
   def show
     resource
     respond_to do |format|
@@ -33,6 +42,6 @@ class TrainsController < ApplicationController
   end
   private
   def permitted_params
-    params.require(:train).permit(:name, fonts_attributes: [:name, :italic, :bold, :fixed, :serif, :fraktur, :_destroy])
+    params.require(:train).permit(:name, fonts_attributes: [:id, :name, :italic, :bold, :fixed, :serif, :fraktur, :_destroy, pictures_attributes: [:id, :data, :_destroy]])
   end
 end

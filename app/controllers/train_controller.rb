@@ -21,6 +21,10 @@ class TrainsController < ApplicationController
 
   end
 
+  def edit
+    @train = Train.find(params[:id])
+  end
+
   def show
     resource
     respond_to do |format|

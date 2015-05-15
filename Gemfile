@@ -23,6 +23,8 @@ gem 'pry'
 gem 'mini_magick'
 gem 'carrierwave'
 gem 'carrierwave-mongoid' #, :git => 'https://github.com/jnicklas/carrierwave-mongoid.git', :branch => 'mongoid-3.0', :require => 'carrierwave/mongoid'
+gem 'carrierwave-crop'
+
 gem 'mongoid', '~> 4.0.0'
 
 gem 'jquery-jcanvas-rails', git: "https://github.com/danielRomero/jquery-jcanvas-rails.git"

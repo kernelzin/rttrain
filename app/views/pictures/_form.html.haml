@@ -6,8 +6,8 @@
       .row
         .col-md-12
           .field
-            = ffile f, :data, id: "imgInp", type: "file"
-            %img#blah{:alt => "your image", :src => "#{link_image(f)}",:width => "25%"}
+            = ffile f, :data, id: "imgInp", type: "file" , class: "fileIn"
+            %img#imgO{:alt => "your image", :src => "#{link_image(f)}",:width => "25%"}
           -# %input#imgInp{:type => "file"}
           -#   = ftext f, :name #, class: "input-auto"
           -# .col-md-3

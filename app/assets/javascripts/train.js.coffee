@@ -15,6 +15,23 @@ pictureCount = ->
 
   return {inpId: inpId, imgO: imgO, pic: pic}
 
+
+showCoords = (c) ->
+  # variables can be accessed here as
+  c.x
+  c.y
+  c.x2
+  c.y2
+  c.w
+  c.h
+  return c
+
+
+addJcrop = ->
+  $("#imgO1").Jcrop
+    onSelect: showCoords
+    onChange: showCoords
+
 previewImage = ->
   imgDiv = pictureCount()
 
@@ -31,6 +48,7 @@ previewImage = ->
         $(input).parent().next().attr 'src', e.target.result
         return
 
+
       reader.readAsDataURL input.files[0]
     return
 
@@ -41,4 +59,5 @@ previewImage = ->
 
 
 $(this).ready(previewImage)
+$(this).ready(addJcrop)
 $(this).on('cocoon:after-insert', previewImage)

@@ -14,5 +14,5 @@
  *= require boot
  *= require_self
  *= require box
- *= require jquery.jcrop
+ *= require jquery.Jcrop.min
  */

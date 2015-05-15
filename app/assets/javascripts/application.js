@@ -18,5 +18,5 @@
 //= require cocoon
 //= require box
 //= require picture
-//= require jquery.jcrop
+//= require jquery.Jcrop.min
 //= require_tree .

@@ -16,19 +16,20 @@ pictureCount = ->
   return {inpId: inpId, imgO: imgO, pic: pic}
 
 
-showCoords = (c) ->
+showCoords = (c, div) ->
   # variables can be accessed here as
-  c.x
-  c.y
-  c.x2
-  c.y2
-  c.w
-  c.h
-  return c
+  # c.x
+  # c.y
+  # c.x2
+  # c.y2
+  # c.w
+  # c.h
+  return # c
 
 
-addJcrop = ->
-  $("#imgO1").Jcrop
+addJcrop = (div) ->
+
+  $(div).Jcrop
     onSelect: showCoords
     onChange: showCoords
 
@@ -46,6 +47,8 @@ previewImage = ->
       console.log(reader)
       reader.onload = (e) ->
         $(input).parent().next().attr 'src', e.target.result
+        console.log($(input.offsetParent.children().find("#x1")))
+        # addJcrop()
         return
 
 
@@ -53,11 +56,10 @@ previewImage = ->
     return
 
   $('.fileIn').change ->
-    readURL this
 
+    readURL this
     return
 
 
 $(this).ready(previewImage)
-$(this).ready(addJcrop)
 $(this).on('cocoon:after-insert', previewImage)

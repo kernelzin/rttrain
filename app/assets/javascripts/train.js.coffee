@@ -17,6 +17,9 @@ pictureCount = ->
 
 
 showCoords = (c, div) ->
+
+  console.log(c)
+  console.log($(div).offsetParent())
   # variables can be accessed here as
   # c.x
   # c.y
@@ -28,27 +31,22 @@ showCoords = (c, div) ->
 
 
 addJcrop = (div) ->
-
-  $(div).Jcrop
-    onSelect: showCoords
-    onChange: showCoords
+  x = "teste"
+  $($(div).parent().next()).Jcrop
+    onSelect: (coords) ->
+      showCoords(coords, x)
+    onChange:  (coords) ->
+      showCoords(coords, div)
 
 previewImage = ->
   imgDiv = pictureCount()
-
-  # console.log(imgDiv.inpId)
-  # console.log(imgDiv.imgO)
-  # console.log(imgDiv.pic)
-
   readURL = (input) ->
-    console.log($(input).parent().next().attr("src"))
     if input.files and input.files[0]
       reader = new FileReader
       console.log(reader)
       reader.onload = (e) ->
         $(input).parent().next().attr 'src', e.target.result
-        console.log($(input.offsetParent.children().find("#x1")))
-        # addJcrop()
+        addJcrop(input)
         return
 
 

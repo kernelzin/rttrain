@@ -17,9 +17,17 @@ pictureCount = ->
 
 
 showCoords = (c, div) ->
-
   console.log(c)
-  console.log($(div).offsetParent())
+  console.log($(div).parent().next())
+  # console.log($(div).offsetParent())
+  $(div).offsetParent().find('#x1').attr "value", c.x
+  $(div).offsetParent().find('#y1').attr "value", c.y
+  $(div).offsetParent().find('#x2').attr "value", c.x2
+  $(div).offsetParent().find('#y2').attr "value", c.y2
+  $(div).offsetParent().find('#w').attr "value", c.w
+  $(div).offsetParent().find('#h').attr "value", c.h
+
+
   # variables can be accessed here as
   # c.x
   # c.y
@@ -27,14 +35,13 @@ showCoords = (c, div) ->
   # c.y2
   # c.w
   # c.h
-  return # c
+  return c
 
 
 addJcrop = (div) ->
-  x = "teste"
   $($(div).parent().next()).Jcrop
     onSelect: (coords) ->
-      showCoords(coords, x)
+      showCoords(coords, div)
     onChange:  (coords) ->
       showCoords(coords, div)
 
@@ -43,7 +50,6 @@ previewImage = ->
   readURL = (input) ->
     if input.files and input.files[0]
       reader = new FileReader
-      console.log(reader)
       reader.onload = (e) ->
         $(input).parent().next().attr 'src', e.target.result
         addJcrop(input)

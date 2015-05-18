@@ -7,12 +7,12 @@
       .row
         .col-md-12
           .field
-            %input.imgC{:hidden => true, :id => "x1"}
-            %input.imgC{:hidden => true, :id => "y1"}
-            %input.imgC{:hidden => true, :id => "x2"}
-            %input.imgC{:hidden => true, :id => "y3"}
-            %input.imgC{:hidden => true, :id => "w"}
-            %input.imgC{:hidden => true, :id => "h"}
+            %input.imgC{:hidden => false, :id => "x1"}
+            %input.imgC{:hidden => false, :id => "y1"}
+            %input.imgC{:hidden => false, :id => "x2"}
+            %input.imgC{:hidden => false, :id => "y2"}
+            %input.imgC{:hidden => false, :id => "w"}
+            %input.imgC{:hidden => false, :id => "h"}
             = ffile f, :data, id: "imgInp", type: "file" , class: "fileIn"
             %img#imgO{:alt => "your image", :src => "#{link_image(f)}",:width => "25%"}
           -# %input#imgInp{:type => "file"}

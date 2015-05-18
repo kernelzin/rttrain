@@ -18,23 +18,16 @@ pictureCount = ->
 
 showCoords = (c, div) ->
   console.log(c)
-  console.log($(div).parent().next())
-  # console.log($(div).offsetParent())
-  $(div).offsetParent().find('#x1').attr "value", c.x
-  $(div).offsetParent().find('#y1').attr "value", c.y
-  $(div).offsetParent().find('#x2').attr "value", c.x2
-  $(div).offsetParent().find('#y2').attr "value", c.y2
-  $(div).offsetParent().find('#w').attr "value", c.w
-  $(div).offsetParent().find('#h').attr "value", c.h
-
-
-  # variables can be accessed here as
-  # c.x
-  # c.y
-  # c.x2
-  # c.y2
-  # c.w
-  # c.h
+  img = $(div).parent().next()
+  imgw =  $(img).width()
+  imgnw = img.get(0).naturalWidth
+  ratio= imgnw / imgw
+  $(div).offsetParent().find('#x1').attr "value", parseInt( c.x  * ratio )
+  $(div).offsetParent().find('#y1').attr "value", parseInt( c.y  *ratio  )
+  $(div).offsetParent().find('#x2').attr "value", parseInt( c.x2 *ratio  )
+  $(div).offsetParent().find('#y2').attr "value", parseInt( c.y2 *ratio  )
+  $(div).offsetParent().find('#w').attr "value",  parseInt( c.w   *ratio )
+  $(div).offsetParent().find('#h').attr "value",  parseInt( c.h   *ratio )
   return c
 
 

@@ -3,7 +3,7 @@ class Picture
   include Mongoid::Document
 
   field :name
-
+  field :coords, type: Hash, default: { :x =>"", :x2 => "", :y => "", :y2 => "", :w => "", :h => ""}
   field :threshold, type: Integer
 
   mount_uploader :data, ImageUploader

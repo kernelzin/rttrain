@@ -42,6 +42,6 @@ class TrainsController < ApplicationController
   end
   private
   def permitted_params
-    params.require(:train).permit(:name, fonts_attributes: [:id, :name, :italic, :bold, :fixed, :serif, :fraktur, :_destroy, pictures_attributes: [:id, :data, :_destroy, :coords]])
+    params.require(:train).permit(:name, fonts_attributes: [:id, :name, :italic, :bold, :fixed, :serif, :fraktur, :_destroy, pictures_attributes: [:id, :data, :_destroy, coords: [:x, :y, :x2, :y2, :w, :h]]])
   end
 end

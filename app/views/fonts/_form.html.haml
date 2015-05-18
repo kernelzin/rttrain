@@ -16,7 +16,7 @@
           .field
             %legend Pictures
             #pictures
-              = f.fields_for :pictures  do |c|
+              = f.fields_for :pictures,  @picture do |c|
                 = render :partial => "pictures/form", :locals => {f: c}
               .links
                 = link_to_add_association "+ Add Picture", f, :pictures, :partial => 'pictures/form', :class => 'btn btn-default btn-block'

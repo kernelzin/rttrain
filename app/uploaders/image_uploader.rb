@@ -34,16 +34,16 @@ class ImageUploader < CarrierWave::Uploader::Base
   version :jpg do
     process convert: 'jpg'
     def full_filename(for_file)
-      n = for_file.split('.')
-      n[-1] = '.jpg'
-      n.join
+      n = File.basename(for_file, File.extname(for_file))
+      n += '.jpg'
     end
   end
 
   # Create different versions of your uploaded files:
-  # version :thumb do
-  #   process :resize_to_fit => [50, 50]
-  # end
+  version :thumb do
+    process :resize_to_fit => [500, nil]
+  end
+
 
   # Add a white list of extensions which are allowed to be uploaded.
   # For images you might use something like this:

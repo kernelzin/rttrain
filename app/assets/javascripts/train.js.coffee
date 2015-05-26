@@ -1,6 +1,4 @@
 $ ->
-  console.log("train")
-
 pictureCount = ->
   # console.log($("#pictures > div" ))
   inpId = $("#pictures > div " ).find("#imgInp").attr("id")

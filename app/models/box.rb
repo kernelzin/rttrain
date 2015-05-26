@@ -7,9 +7,9 @@ class Box
 
   embeds_many :chars, as: :charctertable
   # mount_uploader :data, ImageUploader
-  after_save :from_picture
+  after_create :from_file
 
-  delegate :my_name, :download_pic, :path, :filename, to: :picture
+  delegate :my_name, :download_pic, :path, :filename, :fullpath, :to_tmp, to: :picture
 
   def picf
     picture.font
@@ -17,15 +17,6 @@ class Box
 
   def as_json(options = {})
     options.merge(id: id.to_s, chars: chars.as_json)
-  end
-
-  def from_picture(language = "nota")
-    download_pic
-    if picture.threshold
-      `convert #{path}/#{filename} -threshold #{picture.threshold / 2.55}% #{path}/#{filename}`
-    end
-    `tesseract #{path}/#{filename} #{path}/#{my_name} -l #{language} batch.nochop makebox`
-    from_file
   end
 
   def from_file
@@ -47,9 +38,7 @@ class Box
   def to_tr
     to_file
     file = "/tmp/#{picf.train.name}/#{my_name}"
-    unless File.exist?("#{file}.jpg")
-      download_pic
-    end
+    to_tmp
     stdin, stdout, stderr, wait_thread = Open3.popen3("tesseract #{path}/#{filename} #{file} box.train.stderr")
     c = stderr.gets(nil)
     stderr.close()

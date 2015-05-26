@@ -7,12 +7,12 @@
         .col-md-12
           .field
             = f.fields_for :coords do |c|
-              = c.text_field :x , :id => "x1", :value => f.object.coords[:x]
-              = c.text_field :x2, :id => "x2", :value => f.object.coords[:x2]
-              = c.text_field :y,  :id => "y1", :value => f.object.coords[:y]
-              = c.text_field :y2, :id => "y2", :value => f.object.coords[:y2]
-              = c.text_field :w, :id => "w", :value => f.object.coords[:w]
-              = c.text_field :h, :id => "h", :value => f.object.coords[:h]
+              = c.text_field :x , :id => "x1", :value => f.object.coords[:x]  , :hidden => "true"
+              = c.text_field :x2, :id => "x2", :value => f.object.coords[:x2] , :hidden => "true"
+              = c.text_field :y,  :id => "y1", :value => f.object.coords[:y]  , :hidden => "true"
+              = c.text_field :y2, :id => "y2", :value => f.object.coords[:y2] , :hidden => "true"
+              = c.text_field :w, :id => "w", :value => f.object.coords[:w]    , :hidden => "true"
+              = c.text_field :h, :id => "h", :value => f.object.coords[:h]    , :hidden => "true"
 
             -# %input.imgC{:hidden => false, :id => "x1", :value => @picture.coords[:x]}
             -# %input.imgC{:hidden => false, :id => "y1"}

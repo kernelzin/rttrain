@@ -1,11 +1,55 @@
 %h1 TrainIndex
 %p Nice Traines to train
+.row
+  .col-md-8
+    - for train in @trains
+      .panel.panel-primary
+        .panel-heading
+          .row
+            .col-md-11
+              %form.form-inline
+                .form-group
+                  Train
+                .form-group
+                  %h4=  train.name
+            .col-md-1
+              = link_to "Edit", edit_train_path(train), class: 'btn btn-danger btn-md pull-rigth'
+        .panel-body
+          - for font in train.fonts
+            .panel.panel-primary
+              .panel-heading
+                %form.form-inline
+                  .form-group
+                    Font
+                  .form-group
+                    %h4=  font.name
+              .panel-body
+                - for picture in font.pictures
+                  .well
+                    %form.form-inline
+                      .form-group
+                        %h4= picture.name
+                      - if picture.threshold
+                        .form-group
+                          %h4
+                            %span.label.label-success
+                              Treshold OK!
+                        .row
+                          .col-md-12
+                            %form.form-inline
+                              .form-group
+                                %h4= "#{picture.name}.box"
+                              .form-group
 
-- for train in @trains
-  %h6= link_to train.name, edit_train_path(train)
-  - for font in train.fonts
-    %h6= link_to "-#{font.name}", font
-    - for picture in font.pictures
-      %h6= link_to "--#{picture.name}", edit_picture_path(picture)
-      - if picture.box
-        %h6= link_to "--#{picture.box.chars.count}", edit_box_path(picture.box)
+                                %h4
+                                  %span.label.label-info
+                                    = "Has #{picture.box.chars.count} blobs"
+                              .form-group
+                                = link_to "Edit", edit_box_path(picture.box), class: 'btn btn-danger btn-sm'
+                      - else
+                        .form-group
+                          %h4
+                            %span.label.label-danger
+                              Treshold ajust needed!
+                        .form-group
+                        = link_to "Ajust treshold", edit_picture_path(picture), class: 'btn btn-danger btn-sm'

@@ -12,9 +12,12 @@ class Picture
 
   belongs_to :font
 
+  delegate :path, to: :font
+
   before_save :namez
 
   after_create :crop
+
   after_update :thresholder
 
   def namez
@@ -34,10 +37,6 @@ class Picture
     `convert #{fullpath} -crop #{coords[:w]}x#{coords[:h]}+#{coords[:x]}+#{coords[:y]} #{fullpath}`
     update_attribute(:data , File.open("#{fullpath}"))
     data.recreate_versions!
-  end
-
-  def path
-    "/tmp/#{font.train.name}"
   end
 
   def fullpath

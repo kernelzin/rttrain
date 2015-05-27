@@ -1,5 +1,14 @@
 %h1 TrainIndex
-%p Nice Traines to train
+
+.row
+  .col-md-12
+    %form.form-inline
+      .form-group
+        %p Nice Traines to train
+      .form-group
+        = link_to "New", new_train_path, class: 'btn btn-primary btn-md pull-rigth'
+
+
 .row
   .col-md-8
     - for train in @trains

@@ -9,7 +9,7 @@ class TrainsController < ApplicationController
     end
   end
 
- def resource
+  def resource
     @train = Train.find(params[:id])
   end
 
@@ -19,8 +19,11 @@ class TrainsController < ApplicationController
 
   def create
     @train = Train.new(permitted_params)
-    render "new"
-    @train.save
+    if @train.save
+        redirect_to "/trains"
+    else
+      redirect_to "new"
+    end
   end
 
   def edit
@@ -29,7 +32,7 @@ class TrainsController < ApplicationController
 
   def update
     resource.update_attributes(permitted_params)
-    redirect_to trains_path
+    redirect_to train_path
   end
 
   def show
@@ -37,10 +40,11 @@ class TrainsController < ApplicationController
     respond_to do |format|
       format.html
       format.json { render json:  @train }
-
     end
   end
+
   private
+
   def permitted_params
     params.require(:train).permit(:name, fonts_attributes: [:id, :name, :italic, :bold, :fixed, :serif, :fraktur, :_destroy, pictures_attributes: [:id, :data, :_destroy, coords: [:x, :y, :x2, :y2, :w, :h]]])
   end

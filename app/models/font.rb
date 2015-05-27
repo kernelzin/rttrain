@@ -13,6 +13,8 @@ class Font
 
   has_many :pictures
 
+  delegate :path, to: :train
+
   accepts_nested_attributes_for :pictures, allow_destroy: true
 
   def properties

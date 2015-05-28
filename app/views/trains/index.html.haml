@@ -13,7 +13,7 @@
   .row
     .col-md-12
       - for train in @trains
-        .panel.panel-primary
+        .panel.panel-default
           .panel-heading
             .row
               .col-md-11
@@ -26,7 +26,7 @@
                 = link_to "Edit", edit_train_path(train), class: 'btn btn-danger btn-md pull-rigth'
           .panel-body
             - for font in train.fonts
-              .panel.panel-primary
+              .panel.panel-default
                 .panel-heading
                   %form.form-inline
                     .form-group
@@ -38,7 +38,7 @@
                     .well
                       %form.form-inline
                         .form-group
-                          %h4= picture.name
+                          %h4= picture.filename
                         - if picture.threshold
                           .form-group
                             %h4
@@ -51,7 +51,7 @@
                                   %h4= "#{picture.name}.box"
                                 .form-group
                                   %h4
-                                    %span.label.label-info
+                                    %span.label.label-primary
                                       = "Has #{picture.box.chars.count} blobs"
                                 .form-group
                                   = link_to "Edit", edit_box_path(picture.box), class: 'btn btn-danger btn-sm'

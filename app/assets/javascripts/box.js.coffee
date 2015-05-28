@@ -1,4 +1,5 @@
-$ ->
+
+ready = ->
   bx = $('#js').val()
   be = $('#editjs').val()
   ctr = undefined
@@ -295,7 +296,6 @@ $ ->
     init = (s) ->
       px = p.get(0).naturalWidth / ratio
       py = p.get(0).naturalHeight / ratio
-
       $.getJSON window.location + ".json", (data) ->
         box_id = data.id
         for blob in data.chars
@@ -305,6 +305,7 @@ $ ->
           bh = (blob.y2 - blob.y1) / ratio
           s.addShape new Shape(bx, byy, bw, bh, blob.char, blob.id, data.id, blob.fail)
       return
+
 
     # checks if two points are close enough to each other depending on the closeEnough param
 
@@ -554,10 +555,12 @@ $ ->
             return b
 
 
+
+
     select_row = (char) ->
       $('.table > tbody > tr').each ->
         tbody =  $('.table > tbody')
-        if char.id == $(this).context.children[1].textContent
+        if char.id == $(this).context.children[0].textContent
           clear_tab()
           $(this).attr("class", "active");
           tbody.scrollTop(0)
@@ -617,7 +620,6 @@ $ ->
 
     s = new CanvasState($('#canvas').get(0))
     init(s)
-
 
     $('#sc').change ->
       detect_input(@)
@@ -719,16 +721,30 @@ $ ->
       jsonText = {"chars" : {"char": obj.char, "x" : obj.x * ratio , "y" : nh - (obj.y * ratio) , "w": obj.w * ratio  ,"h" : obj.h * ratio , "id" : obj.id, "box" : obj.box_id}}
       return jsonText
 
+    tag_fail = ->
+      $('.table > tbody > tr').each ->
+        if  $(this).context.children[1].textContent == "true"
+          $(this).attr 'class', 'danger'
+
+    tr_fail_check = ->
+      if $("#tr_fail").val() > 0
+        alert($("#tr_log").text())
+        console.log("FAIL")
+
+
     clear_tab = ->
       $('.table > tbody > tr').each ->
-        $(this).attr 'class', ''
-        return
+        if  $(this).context.children[1].textContent == "true"
+          $(this).attr 'class', 'danger'
+        else
+          $(this).attr 'class', ''
+      return
 
     $('.table > tbody > tr').click ->
       $(this).preventDefault
       clear_tab()
       td = $(this).closest()
-      s.selectShape(td.context.children[1].textContent)
+      s.selectShape(td.context.children[0].textContent)
       $(this).attr("class", "active");
       $(this).attr("class", "current");
 
@@ -746,8 +762,15 @@ $ ->
               return  result.id == blob.id
             result[0].fail = true
             s.changeShape(result[0])
+            tr_fail_check
         )
         dataType: "json"
 
-      console.log("cliquei")
-    return
+    tag_fail()
+
+    tr_fail_check()
+
+
+# $(document).ready(ready)
+$(window).bind('page:change', ready)
+$(document).on('page:load', ready)

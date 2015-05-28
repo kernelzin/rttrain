@@ -40,7 +40,7 @@ class Picture
   end
 
   def fullpath
-    "#{path}/#{filename}"
+    "#{path}#{filename}"
   end
 
   def filename

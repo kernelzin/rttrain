@@ -1,7 +1,10 @@
 %head
 %body{"data-spy" => "scroll", "data-target" => ".scrollspy"}
+  %a{"data-no-turbolink" => "", :href => "..."}>
   %input{:id => "js", :value => "box", :hidden => true}
   %input{:id => "editjs", :value => "true", :hidden => true}
+  %h1.hidden{:id => "tr_log"}= @box.tr_log.html_safe if @box.tr_log
+  %input.hidden{:id => "tr_fail", :value => "#{@box.tr_fail}"}
   %br
   .row
     .col-xs-6.col-md-8
@@ -15,24 +18,26 @@
             .row
               .col-md-6
                 %label{:for => "sx"} x:
-                %input{:id => "sx", :type => "number", :min => "0", :maxlenght => "4", :style => "width: 5em"}
+                %input{:id => "sx", :type => "number", :min => "0", :maxlength => "4", :style => "width: 5em"}
               .col-md-6
                 %label{:for => "sy"} y:
-                %input{:id => "sy", :type => "number", :min => "0", :maxlenght => "4", :style => "width: 5em"}
+                %input{:id => "sy", :type => "number", :min => "0", :maxlength => "4", :style => "width: 5em"}
             %br
             .row
               .col-md-6
                 %label{:for => "sw"} w:
-                %input{:id => "sw", :type => "number", :min => "0", :maxlenght => "4", :style => "width: 5em"}
+                %input{:id => "sw", :type => "number", :min => "0", :maxlength => "4", :style => "width: 5em"}
               .col-md-6
                 %label{:for => "sh"} h:
-                %input{:id => "sh", :type => "number", :min => "0", :maxlenght => "4", :style => "width: 5em"}
+                %input{:id => "sh", :type => "number", :min => "0", :maxlength => "4", :style => "width: 5em"}
           .col-md-6
-            .row
-              .col-md-12
-                %label{:for => "sc"} char:
-                %input{:id => "sc", :type => "text", :min => "0", :size => "1", :maxlenght => "1", :class => "big"}
 
+            %form.form-inline
+              .form-group
+                %label{:for => "sc"} char:
+                %input.big{:id => "sc", min: "1",  maxlength: "1", type: "text"}
+              .form-group
+                %button#totr.btn.btn-md.btn-primary Train Boxes
 
         .row
           .col-md-12
@@ -41,6 +46,7 @@
             %table.table.table-hover
               %thead
                 %tr
+                  %th Index
                   %th char
                   %th x1
                   %th y1
@@ -49,13 +55,13 @@
               %tbody
                 - for char in @box.chars
                   %tr
+                    %td.hidden=char.id
+                    %td.hidden=char.fail
+                    %td= "#{@box.chars.index(char) }"
                     %td= char.char.to_s
-                    %td{:hidden => "true"}=char.id
                     %td= char.x1
                     %td= char.y1
                     %td= char.x2
                     %td= char.y2
 
-          .col-md-12
-            %button#totr Train Boxes
 %footer

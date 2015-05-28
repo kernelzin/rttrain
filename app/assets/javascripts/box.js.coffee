@@ -175,7 +175,7 @@ $ ->
           g = Math.floor(Math.random() * 255)
           b = Math.floor(Math.random() * 255)
           box_id = myState.shapes[0].box_id
-          myState.addShape new Shape(mouse.x - 10, mouse.y - 10, 20, 20, "", undefined , box_id, false)
+          myState.addShape new Shape(mouse.x - 10, mouse.y - 10, 20, 20, ".", undefined , box_id, false)
           return
         ), true
         # mouse down handler for selected state

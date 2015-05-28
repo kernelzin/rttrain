@@ -1,64 +1,84 @@
-%h1 TrainIndex
+.container
+  %h1 TrainIndex
 
-.row
-  .col-md-12
-    %form.form-inline
-      .form-group
-        %p Nice Traines to train
-      .form-group
-        = link_to "New", new_train_path, class: 'btn btn-primary btn-md pull-rigth'
+  .row
+    .col-md-12
+      %form.form-inline
+        .form-group
+          %p Nice Traines to train
+        .form-group
+          = link_to "New", new_train_path, class: 'btn btn-primary btn-md pull-rigth'
 
 
-.row
-  .col-md-8
-    - for train in @trains
-      .panel.panel-primary
-        .panel-heading
-          .row
-            .col-md-11
-              %form.form-inline
-                .form-group
-                  Train
-                .form-group
-                  %h4=  train.name
-            .col-md-1
-              = link_to "Edit", edit_train_path(train), class: 'btn btn-danger btn-md pull-rigth'
-        .panel-body
-          - for font in train.fonts
-            .panel.panel-primary
-              .panel-heading
+  .row
+    .col-md-12
+      - for train in @trains
+        .panel.panel-primary
+          .panel-heading
+            .row
+              .col-md-11
                 %form.form-inline
                   .form-group
-                    Font
+                    Train
                   .form-group
-                    %h4=  font.name
-              .panel-body
-                - for picture in font.pictures
-                  .well
-                    %form.form-inline
-                      .form-group
-                        %h4= picture.name
-                      - if picture.threshold
+                    %h4=  train.name
+              .col-md-1
+                = link_to "Edit", edit_train_path(train), class: 'btn btn-danger btn-md pull-rigth'
+          .panel-body
+            - for font in train.fonts
+              .panel.panel-primary
+                .panel-heading
+                  %form.form-inline
+                    .form-group
+                      Font
+                    .form-group
+                      %h4=  font.name
+                .panel-body
+                  - for picture in font.pictures
+                    .well
+                      %form.form-inline
                         .form-group
-                          %h4
-                            %span.label.label-success
-                              Treshold OK!
-                        .row
-                          .col-md-12
-                            %form.form-inline
-                              .form-group
-                                %h4= "#{picture.name}.box"
-                              .form-group
+                          %h4= picture.name
+                        - if picture.threshold
+                          .form-group
+                            %h4
+                              %span.label.label-success
+                                Treshold OK!
+                          .row
+                            .col-md-12
+                              %form.form-inline
+                                .form-group
+                                  %h4= "#{picture.name}.box"
+                                .form-group
+                                  %h4
+                                    %span.label.label-info
+                                      = "Has #{picture.box.chars.count} blobs"
+                                .form-group
+                                  = link_to "Edit", edit_box_path(picture.box), class: 'btn btn-danger btn-sm'
+                          - if picture.box.has_tr
+                            .row
+                              .col-md-12
+                                %form.form-inline
+                                  .form-group
+                                    %h4= "#{picture.name}.tr"
+                                  .form-group
+                                    - if picture.box.tr_fail
+                                      %h4
+                                        %span.label.label-danger
+                                          = "Was generated with #{picture.box.tr_fail} FAILURES"
+                                    - else
+                                      %h4
+                                        %span.label.label-success
+                                          = "Was generated without FAILURES"
+                                  .form-group
+                                    = link_to "Edit", edit_box_path(picture.box), class: 'btn btn-danger btn-sm'
 
-                                %h4
-                                  %span.label.label-info
-                                    = "Has #{picture.box.chars.count} blobs"
-                              .form-group
-                                = link_to "Edit", edit_box_path(picture.box), class: 'btn btn-danger btn-sm'
-                      - else
-                        .form-group
-                          %h4
-                            %span.label.label-danger
-                              Treshold ajust needed!
-                        .form-group
-                        = link_to "Ajust treshold", edit_picture_path(picture), class: 'btn btn-danger btn-sm'
+
+
+                        - else
+                          .form-group
+                            %h4
+                              %span.label.label-danger
+                                Treshold ajust needed!
+                          .form-group
+                          = link_to "Ajust treshold", edit_picture_path(picture), class: 'btn btn-danger btn-sm'

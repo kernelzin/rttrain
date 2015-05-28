@@ -32,7 +32,7 @@ class TrainsController < ApplicationController
 
   def update
     resource.update_attributes(permitted_params)
-    redirect_to train_path
+    redirect_to "/trains"
   end
 
   def show

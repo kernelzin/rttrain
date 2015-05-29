@@ -12,6 +12,11 @@ class Train
 
   after_update :update_font_properties
 
+
+  def unichar_extrator
+   `unicharset_extractor -D #{path} #{fonts.map(&:pictures).flatten.map(&:box).map(&:box_name).join(" ")}`
+  end
+
   def create_dir
     Dir.mkdir(path) unless Dir.exist?(path)
   end

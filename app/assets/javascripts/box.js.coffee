@@ -1,8 +1,9 @@
 
-ready = ->
+$ ->
   bx = $('#js').val()
   be = $('#editjs').val()
   ctr = undefined
+
   if bx == "box"
 
     p = $('#picture')
@@ -191,7 +192,6 @@ ready = ->
         #
         #
         #
-        console.log(shape)
         if self.w == undefined
           self.x = mouseY
           self.y = mouseX
@@ -430,11 +430,26 @@ ready = ->
         if $(this).hasClass("active")
           $(this).remove()
 
+      result = undefined
+
+      if @shapes[shape].fail == true
+        console.log("fail")
+        result =  @shapes.filter (result) ->
+          return  result.fail == true
+
       @shapes.splice(shape, 1)
       @valid = false
-      if @shapes[shape]
+
+      console.log(result[1])
+
+      if @shapes[shape].fail == true
         @shapes[shape].selected = true
         @selection = @shapes[shape]
+
+      else if @shapes[shape].fail == false
+        @shapes[shape].selected = true
+        @selection = @shapes[shape]
+
       else
         @shapes[prev].selected = true
         @selection = @shapes[prev]
@@ -553,10 +568,6 @@ ready = ->
         if b
           if b.selected
             return b
-
-
-
-
     select_row = (char) ->
       $('.table > tbody > tr').each ->
         tbody =  $('.table > tbody')
@@ -569,7 +580,6 @@ ready = ->
             return $(this)
 
     fill_inputs = (blob) ->
-      console.log(blob)
       $('#sx').val(parseInt(blob.x))
       $('#sy').val(parseInt(blob.y))
       $('#sw').val(parseInt(blob.w))
@@ -617,9 +627,6 @@ ready = ->
               blob.w = parseInt(input)
               s.changeShape(blob)
           )
-
-    s = new CanvasState($('#canvas').get(0))
-    init(s)
 
     $('#sc').change ->
       detect_input(@)
@@ -723,18 +730,16 @@ ready = ->
 
     tag_fail = ->
       $('.table > tbody > tr').each ->
-        if  $(this).context.children[1].textContent == "true"
+        if  $(this).context.children[2].textContent == "true"
           $(this).attr 'class', 'danger'
 
     tr_fail_check = ->
       if $("#tr_fail").val() > 0
         alert($("#tr_log").text())
-        console.log("FAIL")
-
 
     clear_tab = ->
       $('.table > tbody > tr').each ->
-        if  $(this).context.children[1].textContent == "true"
+        if  $(this).context.children[2].textContent == "true"
           $(this).attr 'class', 'danger'
         else
           $(this).attr 'class', ''
@@ -752,7 +757,6 @@ ready = ->
     $('#totr').click ->
       l = window.location.href
       ll = l.substring(0, l.length - 5) + "/tr"
-      console.log(ll)
       post = $.ajax
         type: 'GET'
         url: ll
@@ -768,9 +772,9 @@ ready = ->
 
     tag_fail()
 
+    $(".table").tablesorter()
+    $(".table").tablesorter(sortInitialOrder: "desc")
+
+    s = new CanvasState($('#canvas').get(0))
+    init(s)
     tr_fail_check()
-
-
-# $(document).ready(ready)
-$(window).bind('page:change', ready)
-$(document).on('page:load', ready)

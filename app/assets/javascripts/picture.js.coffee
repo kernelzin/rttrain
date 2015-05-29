@@ -1,8 +1,7 @@
 $ ->
   pic = $('#js').val()
-  console.log(pic)
 
-  if pic
+  if pic == "picture"
 
     p = $('#picture')
     x =  p.width()
@@ -15,17 +14,12 @@ $ ->
     canvas = (c) ->
       img = $('#picture').get(0)
       cp = c.get(0).getContext('2d');
-      console.log(img.width)
-      console.log(img.height)
       cp.canvas.width = parseInt(img.naturalWidth)
       cp.canvas.height = parseInt(img.naturalHeight)
       cp.drawImage(img, 0, 0)
-      console.log(cp)
-      console.log(img)
       pixel = cp.getImageData(0,0, parseInt(img.naturalWidth), parseInt(img.naturalHeight))
       pixel
 
-    canvas(c)
 
     threshold = (pixel, threshold) ->
       d = pixel.data
@@ -59,3 +53,6 @@ $ ->
       threshold(canvas(c), $('#threshold').val())
       return
     # threshold(pixel, 100)
+    # $(document).ready(canvas(c))
+    # $(document).on('page:load', canvas(c))
+    canvas(c)

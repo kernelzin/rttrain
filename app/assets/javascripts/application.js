@@ -14,9 +14,10 @@
 //= require jquery_ujs
 //= require turbolinks
 //= require jquery.turbolinks
+//= require jquery-tablesorter
+//= require jquery.Jcrop.min
 //= require bootstrap
 //= require cocoon
 //= require box
 //= require picture
-//= require jquery.Jcrop.min
 //= require_tree .

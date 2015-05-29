@@ -22,14 +22,14 @@ class Box
   end
 
   def from_file
-    file = box_name
-    File.open(file).read.each_line do |l|
+    File.open(box_name).read.each_line do |l|
       c, x1, y1, x2,y2 = l.split(' ')
       chars.find_or_create_by(char: c, x1: x1, y1: y1, x2: x2, y2: y2)
     end
   end
 
   def to_file
+    picture.font.train.create_dir
     File.open box_name, 'w' do |file|
       chars.each do |c|
         file.puts "#{c.char} #{c.x1} #{c.y1} #{c.x2} #{c.y2} 0"

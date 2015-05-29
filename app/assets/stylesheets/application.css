@@ -15,4 +15,5 @@
  *= require_self
  *= require box
  *= require jquery.Jcrop.min
+ *= require jquery-tablesorter/theme.bootstrap
  */

@@ -33,6 +33,7 @@ class Picture
   end
 
   def crop
+    binding.pry
     download_pic
     `convert #{fullpath} -crop #{coords[:w]}x#{coords[:h]}+#{coords[:x]}+#{coords[:y]} #{fullpath}`
     update_attribute(:data , File.open("#{fullpath}"))

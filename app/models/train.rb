@@ -12,6 +12,10 @@ class Train
 
   after_update :update_font_properties
 
+  def create_dir
+    Dir.mkdir(path) unless Dir.exist?(path)
+  end
+
   def path
     "/tmp/#{name}/"
   end
@@ -31,7 +35,7 @@ class Train
   end
 
   def create_font_properties
-    Dir.mkdir(path) unless Dir.exist?(path)
+    create_dir
     File.open "#{path}#{font_properties}", 'w' do |file|
       fonts.each do |f|
         file.puts "#{f.properties} "

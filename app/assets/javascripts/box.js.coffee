@@ -1,5 +1,6 @@
 
 $ ->
+
   bx = $('#js').val()
   be = $('#editjs').val()
   ctr = undefined
@@ -430,23 +431,23 @@ $ ->
         if $(this).hasClass("active")
           $(this).remove()
 
-      result = undefined
+      result = []
+      result[1] = false
 
       if @shapes[shape].fail == true
-        console.log("fail")
         result =  @shapes.filter (result) ->
           return  result.fail == true
 
       @shapes.splice(shape, 1)
       @valid = false
 
-      console.log(result[1])
 
-      if @shapes[shape].fail == true
-        @shapes[shape].selected = true
-        @selection = @shapes[shape]
+      if result[1]
+        console.log("entrei no result")
+        @shapes[@shapes.indexOf(result[1])].selected = true
+        @selection = @shapes[@shapes.indexOf(result[1])]
 
-      else if @shapes[shape].fail == false
+      else !if result[1]
         @shapes[shape].selected = true
         @selection = @shapes[shape]
 
@@ -778,3 +779,13 @@ $ ->
     s = new CanvasState($('#canvas').get(0))
     init(s)
     tr_fail_check()
+
+
+   #  $('#myAffix').affix({
+  #   offset: {
+  #     top: 100,
+  #     bottom: function () {
+  #       return (this.bottom = $('.footer').outerHeight(true))
+  #     }
+  #   }
+  # })

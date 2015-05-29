@@ -12,15 +12,16 @@
         %th x2
         %th y2
     %tbody
-      - for char in @box.chars
-        %tr
-          %td
-            %h6= char.char.to_s
-          %td
-            %h6= char.x1
-          %td
-            %h6= char.y1
-          %td
-            %h6= char.x2
-          %td
-            %h6= char.y2
+      - if @box
+        - for char in @box.chars
+          %tr
+            %td
+              %h6= char.char.to_s
+            %td
+              %h6= char.x1
+            %td
+              %h6= char.y1
+            %td
+              %h6= char.x2
+            %td
+              %h6= char.y2

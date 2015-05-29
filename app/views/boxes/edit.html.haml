@@ -1,5 +1,4 @@
-%head
-%body{"data-spy" => "scroll", "data-target" => ".scrollspy"}
+.container-fluid
   %input{:id => "js", :value => "box", :hidden => true}
   %input{:id => "editjs", :value => "true", :hidden => true}
   %h1.hidden{:id => "tr_log"}= @box.tr_log.html_safe if @box.tr_log
@@ -9,7 +8,7 @@
     .col-xs-6.col-md-8
       = image_tag  @box.picture.data.jpg,  id: "picture",  hidden: true, width: "100%", crossOrigin: "anonymous"
       %canvas{:id => "canvas"}
-    .col-xs-6.col-md-4.scrollspy
+    .col-xs-6.col-md-4#myAffix
       %ul#nav
         -#.affix-top{"data-spy" => "affix"}
         .row

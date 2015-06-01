@@ -1,0 +1,11 @@
+.row
+  .col-md-12
+    .row
+      .col-md-2
+        .field
+          = ftext ff, :name #, class: "input-auto"
+      .col-md-7
+        .row
+          - [:italic, :bold, :fixed, :serif, :fraktur].each do |c|
+            .col-md-1
+              = fcheck ff, c

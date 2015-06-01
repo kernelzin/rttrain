@@ -1,1 +1,14 @@
-= render "form"
+.container
+  = form_for(@train, :html => {:class => "form", :multipart => true}) do |f|
+    %h1 New Train
+    .row
+      .col-md-6
+        = ftext f, :name #, class: "input-auto"
+      .col-md-5
+        .well
+          %h3
+
+    .row
+      .col-md-12
+        = f.fields_for :font, @train.fonts.new do |ff|
+          = render 'fonts/simple_font', ff: ff

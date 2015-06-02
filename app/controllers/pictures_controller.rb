@@ -9,7 +9,7 @@ class PicturesController < ApplicationController
     end
   end
 
- def resource
+  def resource
     @picture = Picture.find(params[:id])
   end
 
@@ -28,7 +28,11 @@ class PicturesController < ApplicationController
   def update(obj = nil)
     obj ||= resource
     obj.update_attributes(permitted_params)
-    redirect_to(trains_path)
+    if resource.font.pictures.count == 1
+      redirect_to(edit_box_path(resource.box.id))
+    else
+      redirect_to(trains_path)
+    end
   end
 
 

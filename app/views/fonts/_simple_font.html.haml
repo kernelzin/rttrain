@@ -1,11 +1,17 @@
 .row
   .col-md-12
     .row
-      .col-md-2
+      .col-md-12
         .field
-          = ftext ff, :name #, class: "input-auto"
-      .col-md-7
+          %h4 Font Name:
+          = ff.text_field :name, class: 'form-group form-control'
+    .row
+      .col-md-12
         .row
           - [:italic, :bold, :fixed, :serif, :fraktur].each do |c|
-            .col-md-1
+            .col-md-2
               = fcheck ff, c
+    .row
+      .col-md-12
+        = ff.fields_for :pictures, ff.object.pictures.new  do |pf|
+          = render 'pictures/simple_form', pf: pf

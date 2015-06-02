@@ -4,11 +4,16 @@
     .row
       .col-md-6
         = ftext f, :name #, class: "input-auto"
-      .col-md-5
-        .well
-          %h3
+        .row
+          .col-md-12
+            = f.fields_for :fonts, @train.fonts.new do |ff|
+              = render 'fonts/simple_font', ff: ff
 
-    .row
-      .col-md-12
-        = f.fields_for :font, @train.fonts.new do |ff|
-          = render 'fonts/simple_font', ff: ff
+
+      .col-md-5
+        %button{ :type => 'submit'} Salvar
+        .well
+          %h2
+            Bootstrapping a new character set
+          %h3
+            If you are trying to train a new character set, it is a good idea to put in the effort on a single font to get one good box file, run the rest of the training process, and then use Tesseract in your new language to make the rest of the box files as follows:

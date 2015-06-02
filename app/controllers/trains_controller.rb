@@ -15,12 +15,15 @@ class TrainsController < ApplicationController
 
   def new
     @train =  Train.new
+    @picture = Picture.new
   end
 
   def create
     @train = Train.new(permitted_params)
     if @train.save
-        redirect_to "/trains"
+      p @train.fonts.first
+      redirect_to edit_picture_path(@train.fonts.first.pictures.first.id)
+      # redirect_to "/trains"
     else
       redirect_to "new"
     end

@@ -1,0 +1,17 @@
+= pf.fields_for :coords do |c|
+  = c.text_field :x , :id => "x1", :value => pf.object.coords[:x]  , :hidden => "true"
+  = c.text_field :x2, :id => "x2", :value => pf.object.coords[:x2] , :hidden => "true"
+  = c.text_field :y,  :id => "y1", :value => pf.object.coords[:y]  , :hidden => "true"
+  = c.text_field :y2, :id => "y2", :value => pf.object.coords[:y2] , :hidden => "true"
+  = c.text_field :w, :id => "w", :value => pf.object.coords[:w]    , :hidden => "true"
+  = c.text_field :h, :id => "h", :value => pf.object.coords[:h]    , :hidden => "true"
+
+  -# %input.imgC{:hidden => false, :id => "x1", :value => @picture.coords[:x]}
+  -# %input.imgC{:hidden => false, :id => "y1"}
+  -# %input.imgC{:hidden => false, :id => "x2"}
+  -# %input.imgC{:hidden => false, :id => "y2"}
+  -# %input.imgC{:hidden => false, :id => "w"}
+  -# %input.imgC{:hidden => false, :id => "h"}
+
+= ffile pf, :data, id: "imgInp", type: "file" , class: "fileIn"
+%img#imgO{:alt => "your image", :src => "#",:width => "100%"}
